@@ -177,7 +177,24 @@ let camera = {
   }
 
 */
-  
+const gl = canvas.getContext("webgl2", {
+  antialias: false,
+});
+function background(){
+  let blue = 0.0;
+  let then = 0;
+  let deltaTime;
+  function render(now) {
+    now *= 0.001; // convert to seconds
+    deltaTime = now - then;
+    then = now;
+    blue += deltaTime;
+    gl.clearColor(0.0, 0.0, blue, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+};
 
 async function main() {
     console.log(vs);
@@ -185,15 +202,14 @@ async function main() {
     const canvas = document.getElementById("canvas");
     //const fps = document.getElementById("fps");
     //const camid = document.getElementById("camid");
-    const gl = canvas.getContext("webgl2", {
-        antialias: false,
-    });
-    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    // Clear the color buffer with specified clear color
+    background();
+    //requestAnimationFrame(render);
+    /*const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vs);
     gl.compileShader(vertexShader);
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS))
         console.error(gl.getShaderInfoLog(vertexShader));
-
     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragmentShader, fs);
     gl.compileShader(fragmentShader);
@@ -215,7 +231,7 @@ async function main() {
 
     //const values = await parseOBJ('./cube.obj');
     //console.log(values);
-    //const text = await response.text();
+    //const text = await response.text();*/
 }
 
 main().catch((err) => {
