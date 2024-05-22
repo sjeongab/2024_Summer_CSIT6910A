@@ -1,8 +1,8 @@
 # WarmUp
 WebGL warm up
 
-##LOG##
+**LOG**
 [2024-05-22]: Add shader and colour background with buffer
 
-##TODO##
+**TODO**
 Analysis on draw.js and buffer.js: able to draw 2D object with colour
