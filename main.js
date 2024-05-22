@@ -1,4 +1,6 @@
-import {vs, fs} from "./shader.js";
+import {vs, fs, initShaderProgram} from "./shader.js";
+import {initBuffer} from "./buffer.js";
+import {drawScene} from "./draw.js";
 let camera = {
     width: 100,
     height: 100,
@@ -180,6 +182,8 @@ let camera = {
 const gl = canvas.getContext("webgl2", {
   antialias: false,
 });
+
+
 function background(){
   let blue = 0.0;
   let then = 0;
@@ -194,7 +198,8 @@ function background(){
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
-};
+}
+
 
 async function main() {
     console.log(vs);
@@ -203,24 +208,28 @@ async function main() {
     //const fps = document.getElementById("fps");
     //const camid = document.getElementById("camid");
     // Clear the color buffer with specified clear color
+    const shaderProgram = initShaderProgram(gl, vs, fs);
+    gl.useProgram(shaderProgram);
+    const programInfo = {
+      program: shaderProgram,
+      attribLocations: {
+        vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+        vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+      },
+      uniformLocations: {
+        projectionMatrix: gl.getUniformLocation(
+          shaderProgram,
+          "uProjectionMatrix"
+        ),
+        modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+      },
+    };
+    //const buffer = initBuffer(gl);
+    //console.log(buffer);
+    //drawScene(gl, programInfo, buffer);
     background();
-    //requestAnimationFrame(render);
-    /*const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader, vs);
-    gl.compileShader(vertexShader);
-    if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS))
-        console.error(gl.getShaderInfoLog(vertexShader));
-    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, fs);
-    gl.compileShader(fragmentShader);
-    if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS))
-        console.error(gl.getShaderInfoLog(fragmentShader));
 
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    gl.useProgram(program);
+    /*gl.useProgram(program);
     
     const u_projection = gl.getUniformLocation(program, "projection");
     const u_viewport = gl.getUniformLocation(program, "viewport");

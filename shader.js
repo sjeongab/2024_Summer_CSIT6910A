@@ -1,4 +1,4 @@
-const vs = `
+/*const vs = `
   attribute vec4 a_position;
   attribute vec3 a_normal;
   attribute vec2 a_texcoord;
@@ -62,6 +62,38 @@ const vs = `
         specular * pow(specularLight, shininess),
         effectiveOpacity);
   }
-  `;
+  `;*/
 
-  export {vs, fs};
+const vs = `
+attribute vec4 aVertexPosition;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+void main() {
+  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+}
+`;
+
+const fs = `
+void main() {
+  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+}
+`;
+
+function loadShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  return shader;
+}
+
+function initShaderProgram(gl, vs, fs) {
+  const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vs);
+  const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fs);
+  const shaderProgram = gl.createProgram();
+  gl.attachShader(shaderProgram, vertexShader);
+  gl.attachShader(shaderProgram, fragmentShader);
+  gl.linkProgram(shaderProgram);
+  return shaderProgram;
+}
+
+export {vs, fs, initShaderProgram};
