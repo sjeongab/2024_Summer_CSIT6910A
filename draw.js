@@ -24,62 +24,34 @@ function createProjectionMatrix(aspect, zNear=0.1, zFar=100.0){
 }
 
 //TODO: understand View Matrix calculation
-function createModelViewMatrix() {
-  const modelViewMatrix = mat4.create();
-  mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, 0.0, -6.0]);
+function createViewMatrix() {
+  const viewMatrix = mat4.create();
+  mat4.translate(viewMatrix, viewMatrix, [-0.0, 0.0, -6.0]);
   //mat4.translate(modelViewMatrix, modelViewMatrix, camera.position);
-  return modelViewMatrix;
+  return viewMatrix;
 }
 
-function setPositionAttribute(gl, buffers, programInfo){
-  const numComponents = 2;
-  const type = gl.FLOAT;
-  const normalize = false;
-  const stride = 0;
-  const offset = 0;
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-  gl.vertexAttribPointer(
-    programInfo.attribLocations.vertexPosition,
-    numComponents,
-    type,
-    normalize,
-    stride,
-    offset,
-  );
-
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+function setPositionAttribute(gl, buffer, shader){
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.vertexAttribPointer(shader.vertexPosition, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(shader.vertexPosition);
 }
 
-function draw(gl, buffers, programInfo, canvas){
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  gl.clearDepth(1.0);
-  gl.enable(gl.DEPTH_TEST);
-  gl.depthFunc(gl.LEQUAL); 
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+function draw(gl, buffer, shader, canvas){
+  gl.disable(gl.DEPTH_TEST);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
   const projectionMatrix = createProjectionMatrix(canvas.clientWidth/canvas.clientHeight);
-  const modelViewMatrix = createModelViewMatrix();
+  const viewMatrix = createViewMatrix();
   
-  setPositionAttribute(gl, buffers, programInfo);
-  gl.useProgram(programInfo.program);
+  setPositionAttribute(gl, buffer, shader);
+  gl.useProgram(shader.program);
   
-  gl.uniformMatrix4fv(
-    programInfo.uniformLocations.projectionMatrix,
-    false,
-    projectionMatrix,
-  );
-  gl.uniformMatrix4fv(
-    programInfo.uniformLocations.modelViewMatrix,
-    false,
-    modelViewMatrix,
-  );
-  {
-    const offset = 0;
-    const vertexCount = 4;
-    gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
-  }
-
+  gl.uniformMatrix4fv(shader.projectionMatrix, false, projectionMatrix,);
+  gl.uniformMatrix4fv(shader.viewMatrix,false,viewMatrix,);
+  //TODO: update vertexCount
+  const vertexCount = 4;
+  gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, vertexCount);
 }
 
 

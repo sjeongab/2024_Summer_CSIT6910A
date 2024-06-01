@@ -32,7 +32,7 @@ function loadShader(gl, type, source) {
   return shader;
 }
 
-function initShaderProgram(gl) {
+function loadShaderProgram(gl) {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vs);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fs);
   
@@ -45,21 +45,16 @@ function initShaderProgram(gl) {
   if (!gl.getProgramParameter(program, gl.LINK_STATUS))
       console.error(gl.getProgramInfoLog(program));
 
-  return program
+  return program;
 }
 
-function getShaderProgramInfo(gl, shaderProgram){
-  const programInfo = {
-    program: shaderProgram,
-    attribLocations: {
-      vertexPosition: gl.getAttribLocation(shaderProgram, "position"),
-    },
-    uniformLocations:{
-      projectionMatrix: gl.getUniformLocation(shaderProgram, "projection"),
-      modelViewMatrix: gl.getUniformLocation(shaderProgram, "view"),
-    },
-  };
-  return programInfo;
-};
+class Shader{
+  constructor(gl){
+    this.program = loadShaderProgram(gl);
+    this.vertexPosition = gl.getAttribLocation(this.program, "position");
+    this.projectionMatrix = gl.getUniformLocation(this.program, "projection");
+    this.viewMatrix = gl.getUniformLocation(this.program, "view");
+  }
+}
 
-export {initShaderProgram, getShaderProgramInfo};
+export {Shader};
