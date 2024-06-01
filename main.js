@@ -1,6 +1,6 @@
-import {vs, fs, initShaderProgram} from "./shader.js";
+import {initShaderProgram, getShaderProgramInfo} from "./shader.js";
 import {initBuffer} from "./buffer.js";
-import {createProjectionMatrix} from "./draw.js";
+import {draw} from "./draw.js";
 
 
 const gl = canvas.getContext("webgl2", {
@@ -23,13 +23,25 @@ function background(){
   requestAnimationFrame(render);
 }
 
+/*const programInfo = {
+  program: shaderProgram,
+  attribLocations: {
+    vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+  },
+  uniformLocations: {
+    projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
+    modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+  },
+};*/
 
 async function main() {
   const canvas = document.getElementById("canvas");
-  const shaderProgram = initShaderProgram(gl, vs, fs);
+  const shaderProgram = initShaderProgram(gl);
+  const shaderProgramInfo = getShaderProgramInfo(gl, shaderProgram);
+  const buffer = initBuffer(gl);
 
-  background();
-  createProjectionMatrix();
+  //background();
+  draw(gl, buffer, shaderProgramInfo, canvas);
 }
 
 main().catch((err) => {

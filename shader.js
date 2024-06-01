@@ -1,17 +1,29 @@
 const vs = `
-attribute vec4 aVertexPosition;
-uniform mat4 uModelViewMatrix;
-uniform mat4 uProjectionMatrix;
+#version 300 es
+in vec4 position;
+uniform mat4 projection, view;
+
+out vec4 vColor;
+out vec4 vPosition;
 void main() {
-  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+  vColor = projection * view * position;
+  vPosition = position; 
+  gl_Position = projection * view * position;
 }
-`;
+`.trim();
 
 const fs = `
+#version 300 es
+precision highp float;
+
+in vec4 vColor;
+in vec4 vPosition;
+
+out vec4 fragColor;
 void main() {
-  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
-`;
+`.trim();
 
 function loadShader(gl, type, source) {
   const shader = gl.createShader(type);
@@ -20,29 +32,34 @@ function loadShader(gl, type, source) {
   return shader;
 }
 
-function initShaderProgram(gl, vs, fs) {
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader, vs);
-    gl.compileShader(vertexShader);
-    if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS))
-        console.error(gl.getShaderInfoLog(vertexShader));
+function initShaderProgram(gl) {
+  const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vs);
+  const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fs);
+  
+  const program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+  gl.useProgram(program);
 
-    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, fs);
-    gl.compileShader(fragmentShader);
-    if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS))
-        console.error(gl.getShaderInfoLog(fragmentShader));
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+      console.error(gl.getProgramInfoLog(program));
 
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-        console.error(gl.getProgramInfoLog(program));
-
-    return program
+  return program
 }
 
-export {vs, fs, initShaderProgram};
+function getShaderProgramInfo(gl, shaderProgram){
+  const programInfo = {
+    program: shaderProgram,
+    attribLocations: {
+      vertexPosition: gl.getAttribLocation(shaderProgram, "position"),
+    },
+    uniformLocations:{
+      projectionMatrix: gl.getUniformLocation(shaderProgram, "projection"),
+      modelViewMatrix: gl.getUniformLocation(shaderProgram, "view"),
+    },
+  };
+  return programInfo;
+};
+
+export {initShaderProgram, getShaderProgramInfo};

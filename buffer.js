@@ -1,4 +1,12 @@
 function initBuffer(gl) {
+    const positionBuffer = initPositionBuffer(gl);
+  
+    return {
+      position: positionBuffer,
+    };
+  }
+
+function initPositionBuffer(gl) {
     const indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
 
