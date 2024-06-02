@@ -24,7 +24,8 @@ void main() {
   fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 `.trim();
-
+//TODO: Add colour
+//TODO: Add texture
 function loadShader(gl, type, source) {
   const shader = gl.createShader(type);
   gl.shaderSource(shader, source);
@@ -52,6 +53,7 @@ class Shader{
   constructor(gl){
     this.program = loadShaderProgram(gl);
     this.vertexPosition = gl.getAttribLocation(this.program, "position");
+    //TODO: Add colour
     this.projectionMatrix = gl.getUniformLocation(this.program, "projection");
     this.viewMatrix = gl.getUniformLocation(this.program, "view");
   }

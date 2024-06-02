@@ -1,7 +1,7 @@
 let camera = {
   width: 100,
   height: 100,
-  position: [5, 0, 1],
+  position: [-1,-1.5,-2],
   rotation: [
       [-0.026919994628162257, -0.1565891128261527, -0.9872968974090509],
       [0.08444552208239385, 0.983768234577625, -0.1583319754069128],
@@ -11,31 +11,45 @@ let camera = {
   fx: 100,
 };
 
-//TODO: understand Projection Matrix calculation
 function createProjectionMatrix(aspect, zNear=0.1, zFar=100.0){
-  //let fieldOfView = 2*Math.atan(camera.height/2/camera.fy)*180/Math.PI;
-  const fieldOfView = (45 * Math.PI) / 180; // in radians
-  //const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-  //onst zNear = 0.1;
-  //const zFar = 100.0;
+  const fieldOfView = 2*Math.atan(camera.height/2/camera.fy)*180/Math.PI;
   const projectionMatrix = mat4.create();
   mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
   return projectionMatrix;
 }
 
-//TODO: understand View Matrix calculation
 function createViewMatrix() {
   const viewMatrix = mat4.create();
-  mat4.translate(viewMatrix, viewMatrix, [-0.0, 0.0, -6.0]);
-  //mat4.translate(modelViewMatrix, modelViewMatrix, camera.position);
+  mat4.translate(viewMatrix, viewMatrix, camera.position);
   return viewMatrix;
 }
 
 function setPositionAttribute(gl, buffer, shader){
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.vertexAttribPointer(shader.vertexPosition, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer.vertexBuffer);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+  gl.vertexAttribPointer(shader.vertexPosition, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(shader.vertexPosition);
 }
+
+//TODO: Add colour
+/*function setColorAttribute(gl, buffer, shader){
+  const numComponents = 4;
+  const type = gl.FLOAT;
+  const normalize = false;
+  const stride = 0;
+  const offset = 0;
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer.colourBuffer);
+  gl.vertexAttribPointer(
+    shader.,
+    numComponents,
+    type,
+    normalize,
+    stride,
+    offset
+  );
+  gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+
+}*/
 
 function draw(gl, buffer, shader, canvas){
   gl.disable(gl.DEPTH_TEST);
@@ -50,8 +64,11 @@ function draw(gl, buffer, shader, canvas){
   gl.uniformMatrix4fv(shader.projectionMatrix, false, projectionMatrix,);
   gl.uniformMatrix4fv(shader.viewMatrix,false,viewMatrix,);
   //TODO: update vertexCount
-  const vertexCount = 4;
-  gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, vertexCount);
+  const vertexCount = 36;
+  const type = gl.UNSIGNED_SHORT;
+  const offset = 0;
+  gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+  //gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, vertexCount, vertexCount);
 }
 
 
