@@ -1,7 +1,7 @@
 let camera = {
   width: 100,
   height: 100,
-  position: [-1,-1.5,-2],
+  position: [10, 1, 2],
   rotation: [
       [-0.026919994628162257, -0.1565891128261527, -0.9872968974090509],
       [0.08444552208239385, 0.983768234577625, -0.1583319754069128],
@@ -12,16 +12,38 @@ let camera = {
 };
 
 function createProjectionMatrix(aspect, zNear=0.1, zFar=100.0){
-  const fieldOfView = 2*Math.atan(camera.height/2/camera.fy)*180/Math.PI;
+  /*const fieldOfView = 2*Math.atan(camera.height/2/camera.fy)*180/Math.PI;
   const projectionMatrix = mat4.create();
-  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-  return projectionMatrix;
+  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);*/
+  //const znear = 0.2;
+  //const zfar = 200;
+  return [
+      [(2 * camera.fx) / camera.width, 0, 0, 0],
+      [0, -(2 * camera.fy) / camera.height, 0, 0],
+      [0, 0, zFar / (zFar - zNear), 1],
+      [0, 0, -(zFar * zNear) / (zFar - zNear), 0],
+  ].flat();
+  //return projectionMatrix;
 }
 
-function createViewMatrix() {
+function createViewMatrix(camera) {/*
   const viewMatrix = mat4.create();
   mat4.translate(viewMatrix, viewMatrix, camera.position);
-  return viewMatrix;
+  return viewMatrix;*/
+  const R = camera.rotation.flat();
+  const t = camera.position;
+  const camToWorld = [
+      [R[0], R[1], R[2], 0],
+      [R[3], R[4], R[5], 0],
+      [R[6], R[7], R[8], 0],
+      [
+          -t[0] * R[0] - t[1] * R[3] - t[2] * R[6],
+          -t[0] * R[1] - t[1] * R[4] - t[2] * R[7],
+          -t[0] * R[2] - t[1] * R[5] - t[2] * R[8],
+          1,
+      ],
+  ].flat();
+  return camToWorld;
 }
 
 function setPositionAttribute(gl, buffer, shader){
@@ -31,8 +53,7 @@ function setPositionAttribute(gl, buffer, shader){
   gl.enableVertexAttribArray(shader.vertexPosition);
 }
 
-//TODO: Add colour
-/*function setColorAttribute(gl, buffer, shader){
+function setColourAttribute(gl, buffer, shader){
   const numComponents = 4;
   const type = gl.FLOAT;
   const normalize = false;
@@ -40,25 +61,32 @@ function setPositionAttribute(gl, buffer, shader){
   const offset = 0;
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer.colourBuffer);
   gl.vertexAttribPointer(
-    shader.,
+    shader.vertexColour,
     numComponents,
     type,
     normalize,
     stride,
     offset
   );
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+  gl.enableVertexAttribArray(shader.vertexColour);
 
-}*/
+}
 
-function draw(gl, buffer, shader, canvas){
-  gl.disable(gl.DEPTH_TEST);
+function draw(gl, buffer, shader, canvas, cubeRotation){
+  gl.enable(gl.DEPTH_TEST);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   const projectionMatrix = createProjectionMatrix(canvas.clientWidth/canvas.clientHeight);
-  const viewMatrix = createViewMatrix();
+  const viewMatrix = createViewMatrix(camera);
+  mat4.rotate(
+    viewMatrix, // destination matrix
+    viewMatrix, // matrix to rotate
+    cubeRotation, // amount to rotate in radians
+    [0, 0, 1]
+  );
   
   setPositionAttribute(gl, buffer, shader);
+  setColourAttribute(gl, buffer, shader);
   gl.useProgram(shader.program);
   
   gl.uniformMatrix4fv(shader.projectionMatrix, false, projectionMatrix,);

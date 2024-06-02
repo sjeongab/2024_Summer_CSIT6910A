@@ -6,7 +6,7 @@ WebGL warm up
   * Add shader and colour background with buffer
     
 **[2024-05-27]**
-  * CreateProjectionMatrix based on camera
+  * Create projection matrix based on camera
     
 **[2024-06-01]**
   * Fix shader and add draw object to screen
@@ -14,8 +14,11 @@ WebGL warm up
 **[2024-06-02]**
   * Add camera
   * Render 3D object
+  * Add colour to object
+  * Animate object
 
 ## TODO
-* Add color to object
+* Code clean up
+* Revisit projectionMatrix / viewMatrix
 * Add texture to object
 * Create CSS file

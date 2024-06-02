@@ -1,12 +1,13 @@
 const vs = `
 #version 300 es
 in vec4 position;
+in vec4 colour;
 uniform mat4 projection, view;
 
-out vec4 vColor;
+out vec4 vColour;
 out vec4 vPosition;
 void main() {
-  vColor = projection * view * position;
+  vColour = colour;
   vPosition = position; 
   gl_Position = projection * view * position;
 }
@@ -16,15 +17,15 @@ const fs = `
 #version 300 es
 precision highp float;
 
-in vec4 vColor;
+in vec4 vColour;
 in vec4 vPosition;
 
 out vec4 fragColor;
 void main() {
-  fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  fragColor = vColour;
 }
 `.trim();
-//TODO: Add colour
+
 //TODO: Add texture
 function loadShader(gl, type, source) {
   const shader = gl.createShader(type);
@@ -53,7 +54,7 @@ class Shader{
   constructor(gl){
     this.program = loadShaderProgram(gl);
     this.vertexPosition = gl.getAttribLocation(this.program, "position");
-    //TODO: Add colour
+    this.vertexColour = gl.getAttribLocation(this.program, "colour");
     this.projectionMatrix = gl.getUniformLocation(this.program, "projection");
     this.viewMatrix = gl.getUniformLocation(this.program, "view");
   }
