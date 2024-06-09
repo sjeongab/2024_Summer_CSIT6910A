@@ -1,5 +1,18 @@
-# WarmUp
-WebGL warm up
+# 2024 Summer CSIT 6910A
+**Re-implementation of Seathru NeRF through 3D Gaussian Splatting**
+
+## WarmUp
+### TODO
+* Code clean up
+* Optimize code: render faster
+* Revisit projectionMatrix / viewMatrix
+* Add texture to object
+* Add controls to the viewer
+* Create CSS file
+
+## SeathruNeRF
+
+## 3D Gaussian Splatting
 
 ## LOG
 **[2024-05-22]** 
@@ -29,10 +42,4 @@ WebGL warm up
 **[2024-06-09]**
   * Load windmill obj
 
-## TODO
-* Code clean up
-* Optimize code: render faster
-* Revisit projectionMatrix / viewMatrix
-* Add texture to object
-* Add controls to the viewer
-* Create CSS file
+
