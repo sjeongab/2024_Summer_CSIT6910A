@@ -59,14 +59,14 @@ const indices = [
     23, // left
   ];
 
-  const faceColours = [
-    [1.0, 1.0, 1.0, 1.0], // Front face: white
-    [1.0, 0.0, 0.0, 1.0], // Back face: red
-    [0.0, 1.0, 0.0, 1.0], // Top face: green
-    [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
-    [1.0, 1.0, 0.0, 1.0], // Right face: yellow
-    [1.0, 0.0, 1.0, 1.0], // Left face: purple
-  ];
+const faceColours = [
+  [1.0, 1.0, 1.0, 1.0], // Front face: white
+  [1.0, 0.0, 0.0, 1.0], // Back face: red
+  [0.0, 1.0, 0.0, 1.0], // Top face: green
+  [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
+  [1.0, 1.0, 0.0, 1.0], // Right face: yellow
+  [1.0, 0.0, 1.0, 1.0], // Left face: purple
+];
 
 function loadVertexBuffer(gl, positions) {
     const vertexBuffer = gl.createBuffer();
@@ -78,10 +78,12 @@ function loadVertexBuffer(gl, positions) {
 
 function loadColourBuffer(gl, faceColours) {
      var colours = [];
+     console.log(faceColours);
      for (var i=0; i<faceColours.length; ++i){
         const c = faceColours[i];
         colours = colours.concat(c,c,c,c);
      }
+     console.log(colours);
      const colourBuffer = gl.createBuffer();
      gl.bindBuffer(gl.ARRAY_BUFFER, colourBuffer);
      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colours), gl.STATIC_DRAW);
@@ -96,9 +98,13 @@ function loadIndexBuffer(gl, indices){
 }
 
 class Buffer{
-    constructor(gl){
-      this.vertexBuffer = loadVertexBuffer(gl, threeDPositions);
-      this.colourBuffer = loadColourBuffer(gl, faceColours);
+    constructor(gl, position){
+      
+      //const positions = parseOBJ(box);
+      console.log(position);
+
+      this.vertexBuffer = loadVertexBuffer(gl, position);
+      //this.colourBuffer = loadColourBuffer(gl, faceColours);
       this.indexBuffer = loadIndexBuffer(gl, indices);
     }
   }

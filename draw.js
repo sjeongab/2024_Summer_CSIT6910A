@@ -1,7 +1,7 @@
 let camera = {
   width: 100,
   height: 100,
-  position: [10, 1, 2],
+  position: [15,3,1],
   rotation: [
       [-0.026919994628162257, -0.1565891128261527, -0.9872968974090509],
       [0.08444552208239385, 0.983768234577625, -0.1583319754069128],
@@ -11,25 +11,16 @@ let camera = {
   fx: 100,
 };
 
-function createProjectionMatrix(aspect, zNear=0.1, zFar=100.0){
-  /*const fieldOfView = 2*Math.atan(camera.height/2/camera.fy)*180/Math.PI;
-  const projectionMatrix = mat4.create();
-  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);*/
-  //const znear = 0.2;
-  //const zfar = 200;
+function createProjectionMatrix(zNear=0.1, zFar=100.0){
   return [
       [(2 * camera.fx) / camera.width, 0, 0, 0],
       [0, -(2 * camera.fy) / camera.height, 0, 0],
       [0, 0, zFar / (zFar - zNear), 1],
       [0, 0, -(zFar * zNear) / (zFar - zNear), 0],
   ].flat();
-  //return projectionMatrix;
 }
 
-function createViewMatrix(camera) {/*
-  const viewMatrix = mat4.create();
-  mat4.translate(viewMatrix, viewMatrix, camera.position);
-  return viewMatrix;*/
+function createViewMatrix(camera) {
   const R = camera.rotation.flat();
   const t = camera.position;
   const camToWorld = [
@@ -48,7 +39,7 @@ function createViewMatrix(camera) {/*
 
 function setPositionAttribute(gl, buffer, shader){
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer.vertexBuffer);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+  //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
   gl.vertexAttribPointer(shader.vertexPosition, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(shader.vertexPosition);
 }
@@ -74,29 +65,30 @@ function setColourAttribute(gl, buffer, shader){
 
 function draw(gl, buffer, shader, canvas, cubeRotation){
   gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.CULL_FACE);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  const projectionMatrix = createProjectionMatrix(canvas.clientWidth/canvas.clientHeight);
+  const projectionMatrix = createProjectionMatrix();
   const viewMatrix = createViewMatrix(camera);
   mat4.rotate(
     viewMatrix, // destination matrix
     viewMatrix, // matrix to rotate
     cubeRotation, // amount to rotate in radians
-    [0, 0, 1]
+    [0, 1, 0]
   );
   
   setPositionAttribute(gl, buffer, shader);
-  setColourAttribute(gl, buffer, shader);
+  //setColourAttribute(gl, buffer, shader);
   gl.useProgram(shader.program);
   
   gl.uniformMatrix4fv(shader.projectionMatrix, false, projectionMatrix,);
   gl.uniformMatrix4fv(shader.viewMatrix,false,viewMatrix,);
   //TODO: update vertexCount
-  const vertexCount = 36;
+  const vertexCount = 24498;
   const type = gl.UNSIGNED_SHORT;
   const offset = 0;
-  gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
-  //gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, vertexCount, vertexCount);
+  //gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+  gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, vertexCount, vertexCount);
 }
 
 
