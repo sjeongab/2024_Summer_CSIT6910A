@@ -17,8 +17,22 @@ WebGL warm up
   * Add colour to object
   * Animate object
 
+**[2024-06-05]**
+  * Proposal: Background & Technical Method
+
+**[2024-06-06]**
+  * Proposal: Expected Result & Timeline
+
+**[2024-06-08]**
+  * Install WSL for seathruNeRF
+
+**[2024-06-09]**
+  * Load windmill obj
+
 ## TODO
 * Code clean up
+* Optimize code: render faster
 * Revisit projectionMatrix / viewMatrix
 * Add texture to object
+* Add controls to the viewer
 * Create CSS file
