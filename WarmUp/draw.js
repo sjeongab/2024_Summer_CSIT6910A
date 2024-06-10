@@ -1,7 +1,7 @@
 let camera = {
   width: 100,
   height: 100,
-  position: [15,3,1],
+  position: [20,5,1],
   rotation: [
       [-0.026919994628162257, -0.1565891128261527, -0.9872968974090509],
       [0.08444552208239385, 0.983768234577625, -0.1583319754069128],
@@ -73,7 +73,7 @@ function draw(gl, buffer, shader, canvas, cubeRotation){
   mat4.rotate(
     viewMatrix, // destination matrix
     viewMatrix, // matrix to rotate
-    cubeRotation, // amount to rotate in radians
+    cubeRotation, // amount to rotate in radiansssss
     [0, 1, 0]
   );
   
@@ -84,7 +84,7 @@ function draw(gl, buffer, shader, canvas, cubeRotation){
   gl.uniformMatrix4fv(shader.projectionMatrix, false, projectionMatrix,);
   gl.uniformMatrix4fv(shader.viewMatrix,false,viewMatrix,);
   //TODO: update vertexCount
-  const vertexCount = 24498;
+  const vertexCount = 7038;
   const type = gl.UNSIGNED_SHORT;
   const offset = 0;
   //gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
