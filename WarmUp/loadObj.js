@@ -1,12 +1,86 @@
-// WebGL - load obj - w/mtl, textures
-// from https://webglfundamentals.org/webgl/webgl-load-obj-w-mtl-w-textures.html
-
-
 "use strict";
 
-// This is not a full .obj parser.
-// see http://paulbourke.net/dataformats/obj/
+const windmill = "./windmill.obj";
 
+function setGeometry(geometries, geometry, webglVertexData) {
+  if (!geometry) {
+    const position = [];
+    const texcoord = [];
+    const normal = [];
+    const color = [];
+    webglVertexData = [
+      position,
+      texcoord,
+      normal,
+      color,
+    ];
+    geometry = {
+      object,
+      groups,
+      material,
+      data: {
+        position,
+        texcoord,
+        normal,
+        color,
+      },
+    };
+    geometries.push(geometry);
+  }
+}
+
+function addVertex(vert, objVertexData, webglVertexData) {
+  const ptn = vert.split('/');
+  ptn.forEach((objIndexStr, i) => {
+    if (!objIndexStr) {
+      return;
+    }
+    const objIndex = parseInt(objIndexStr);
+    const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
+    webglVertexData[i].push(...objVertexData[i][index]);
+    // if this is the position index (index 0) and we parsed
+    // vertex colors then copy the vertex colors to the webgl vertex color data
+    if (i === 0 && objColors.length > 1) {
+      geometry.data.color.push(...objColors[index]);
+    }
+  });
+}
+
+function parseOBJ(text) {
+  const objPositions = [[0, 0, 0]];
+  const objTexcoords = [[0, 0]];
+  const objNormals = [[0, 0, 0]];
+  const objColors = [[0, 0, 0]];
+
+  const objVertexData = [
+    objPositions,
+    objTexcoords,
+    objNormals,
+    objColors,
+  ];
+
+  let webglVertexData = [
+    [],   // positions
+    [],   // texcoords
+    [],   // normals
+    [],   // colors
+  ];
+
+  const materialLibs = [];
+  const geometries = [];
+  let geometry;
+  let groups = ['default'];
+  let material = 'default';
+  let object = 'default';
+}
+
+class Figure{
+  constructor(objPath){
+    const objHref = windmill;
+    const response = fetch(objHref);
+    const text = response.text();
+  }
+}
 function parseKeyword(text) {
   //const keywords = {};
   const keywordRE = /(\w*)(?: )*(.*)/;
@@ -480,4 +554,5 @@ function requestCORSIfNotSameOrigin(img, url) {
   }
 }
 
+lo
 export {parseOBJ};

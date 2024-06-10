@@ -22,10 +22,6 @@ function render(gl, buffer, shader, then){
 let deltaTime = 0;
 let cubeRotation = 0.0;
 async function main() {
-  //const box = await (await fetch('./box.obj')).text();
-  //const ham0 = await (await fetch('./ham_0.obj')).text();
-  //const ham1 = await (await fetch('./ham_1.obj')).text();
-  //const ham2 = await (await fetch('./ham_2.obj')).text();
   const objHref = 'https://webgl2fundamentals.org/webgl/resources/models/windmill/windmill.obj';  
   const response = await fetch(objHref);
   const text = await response.text();
