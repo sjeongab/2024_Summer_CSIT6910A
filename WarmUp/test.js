@@ -4,6 +4,18 @@
 // see http://paulbourke.net/dataformats/obj/
 const fpsElem = document.querySelector("#fps");
 
+document.addEventListener('keydown', onKeyDown, false);
+
+let y = 0;
+function onKeyDown(event){
+  if(event.key == 'w'){
+    y+=1;
+  }
+  if(event.key == 's'){
+    y-=1;
+  }
+}
+
 function parseOBJ(text) {
   // because indices are base 1 let's just fill in the 0th data
   const objPositions = [[0, 0, 0]];
@@ -421,11 +433,12 @@ async function main() {
   // figure out how far away to move the camera so we can likely
   // see the object.
   const radius = m4.length(range) * 1.2;
-  const cameraPosition = m4.addVectors(cameraTarget, [
+  let cameraPosition = m4.addVectors(cameraTarget, [
     0,
     0,
     radius,
   ]);
+  console.log(cameraPosition);
   // Set zNear and zFar to something hopefully appropriate
   // for the size of this object.
   const zNear = radius / 100;
@@ -443,6 +456,7 @@ async function main() {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.enable(gl.DEPTH_TEST);
 
+    cameraPosition[1] = y;
     const fieldOfViewRadians = degToRad(60);
     const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     const projection = m4.perspective(fieldOfViewRadians, aspect, zNear, zFar);

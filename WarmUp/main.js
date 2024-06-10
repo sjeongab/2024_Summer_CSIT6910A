@@ -5,6 +5,7 @@ import {parseOBJ} from "./loadObj.js";
 
 const fpsElem = document.querySelector("#fps");
 
+
 function render(gl, buffer, shader, then){
   function rotate(now) {
     now *= 0.001; 
@@ -12,7 +13,7 @@ function render(gl, buffer, shader, then){
     then = now;                            // remember time for next frame
     const fps = 1 / deltaTime;             // compute frames per second
     fpsElem.textContent = fps.toFixed(1);
-    draw(gl, buffer, shader, canvas, now);
+    draw(gl, buffer, shader, now);
     requestAnimationFrame(rotate);
   }
   requestAnimationFrame(rotate);
