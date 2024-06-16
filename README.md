@@ -46,4 +46,9 @@
   * Add keyboard input
   * Start re-work on loadObj
 
+**[2024-06-12]**
+  * SeathruNeRF env set up: Install JaxLib and Cuda
+
+**[2024-06-13]**
+  * SeathruNeRF env set up: Tensorflow 
 
