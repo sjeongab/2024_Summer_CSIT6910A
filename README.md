@@ -11,8 +11,14 @@
 * Create CSS file
 
 ## SeathruNeRF
+* Tensorflow GPU
+* Wandadb issue
 
 ## 3D Gaussian Splatting
+### TODO
+* Literature review
+* Code re-implementation
+
 
 ## LOG
 **[2024-05-22]** 
@@ -52,3 +58,8 @@
 **[2024-06-13]**
   * SeathruNeRF env set up: Tensorflow 
 
+**[2024-06-16]**
+  * 3DGS literature review: introduction
+
+**[2024-06-17]**
+  * WarmUp: parse keyword
