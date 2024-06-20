@@ -63,3 +63,12 @@
 
 **[2024-06-17]**
   * WarmUp: parse keyword
+
+**[2024-06-18]**
+  * Try NeRF_studio seathru_NeRF 
+
+**[2024-06-19]**
+  * Re-install Linux
+
+**[2024-06-20]**
+  * Successfully installed NeRF_studio seathru_NeRF
