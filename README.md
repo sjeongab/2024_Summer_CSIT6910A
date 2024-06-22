@@ -9,11 +9,15 @@
 * Add texture to object
 * Add controls to the viewer
 * Create CSS file
+* pass geometry object
 
 ## SeathruNeRF
+### TODO
 * Tensorflow GPU
 * Wandadb issue
 * Run code
+* Install Ninja
+* create Transform.json file
 
 ## 3D Gaussian Splatting
 ### TODO
@@ -79,3 +83,4 @@
 
 **[2024-06-22]**
   * 3DGS literature review: Optimization
+  * WarmUp: Load OBJ

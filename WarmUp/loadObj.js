@@ -1,77 +1,7 @@
 "use strict";
 
 const windmill = "./windmill.obj";
-
 const keywordRE = /(\w*)(?: )*(.*)/;
-const objectKeywords = {
-  v(parts) {
-      objPositions.push(parts.map(parseFloat));
-  },
-  vn(parts) {
-    objNormals.push(parts.map(parseFloat));
-  },
-  vt(parts) {
-    objTexcoords.push(parts.map(parseFloat));
-  },
-  f(parts) {
-    setGeometry();
-    const numTriangles = parts.length - 2;
-    for (let tri = 0; tri < numTriangles; ++tri) {
-      addVertex(parts[0]);
-      addVertex(parts[tri + 1]);
-      addVertex(parts[tri + 2]);
-    }
-  },
-  mtllib(parts, unparsedArgs) {
-    materialLibs.push(unparsedArgs);
-  },
-  usemtl(parts, unparsedArgs) {
-    material = unparsedArgs;
-    newGeometry();
-  },
-  g(parts) {
-    groups = parts;
-    newGeometry();
-  },
-  o(parts, unparsedArgs) {
-    object = unparsedArgs;
-    newGeometry();
-  },
-};
-
-class Figure{
-  constructor(objName = windmill){
-    const objHref = objName;
-    const response = fetch(objHref);
-    const text = response.text();
-
-    const objPositions = [[0, 0, 0]];
-    const objTexcoords = [[0, 0]];
-    const objNormals = [[0, 0, 0]];
-    const objColors = [[0, 0, 0]];
-
-    const materialLibs = [];
-    const geometries = [];
-    let geometry;
-    let groups = ['default'];
-    let material = 'default';
-    let object = 'default';
-
-    const objVertexData = [
-      objPositions,
-      objTexcoords,
-      objNormals,
-      objColors,
-    ];
-
-    let webglVertexData = [
-      [],   // positions
-      [],   // texcoords
-      [],   // normals
-      [],   // colors
-    ];
-  }
-}
 
 function newGeometry(geometry) {
   if (geometry && geometry.data.position.length) {
@@ -80,8 +10,9 @@ function newGeometry(geometry) {
 }
 
 
-function setGeometry(geometries, geometry, webglVertexData) {
+function setGeometry(geometries, geometry, groups, material, object, webglVertexData) {
   if (!geometry) {
+    console.log(geometry);
     const position = [];
     const texcoord = [];
     const normal = [];
@@ -105,26 +36,80 @@ function setGeometry(geometries, geometry, webglVertexData) {
         color,
       },
     };
+    console.log(geometry);
     geometries.push(geometry);
   }
 }
 
-function addVertex(vert, objVertexData, webglVertexData, geometry) {
-  const ptn = vert.split('/');
-  ptn.forEach((objIndexStr, i) => {
-    if (!objIndexStr) {
-      return;
+class ObjectKeyWords{
+  constructor(){
+    const objPositions = [[0, 0, 0]];
+    const objTexcoords = [[0, 0]];
+    const objNormals = [[0, 0, 0]];
+    const objColors = [[0, 0, 0]];
+
+    this.materialLibs = [];
+    this.geometries = [];
+    this.geometry = undefined;
+    this.groups = ['default'];
+    this.material = 'default';
+    this.object = 'default';
+
+    this.objVertexData = [
+      objPositions,
+      objTexcoords,
+      objNormals,
+      objColors,
+    ];
+
+    this.webglVertexData = [
+      [],   // positions
+      [],   // texcoords
+      [],   // normals
+      [],   // colors
+    ];
+  }
+  v(parts) {
+    this.objVertexData[0].push(parts.map(parseFloat));
+  }
+  vt(parts) {
+    this.objVertexData[1].push(parts.map(parseFloat));
+  }
+  vn(parts) {
+    this.objVertexData[2].push(parts.map(parseFloat));
+  }
+  f(parts) {
+    console.log(this.geometry);
+    setGeometry(this.geometries, this.geometry, this.groups, this.material, this.object, this.webglVertexData);
+    console.log(this.geometry);
+    const numTriangles = parts.length - 2;
+    for (let tri = 0; tri < numTriangles; ++tri) {
+      addVertex(parts[0], this.objVertexData, this.webglVertexData);
+      addVertex(parts[tri + 1], this.objVertexData, this.webglVertexData);
+      addVertex(parts[tri + 2], this.objVertexData, this.webglVertexData);
     }
-    const objIndex = parseInt(objIndexStr);
-    const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
-    webglVertexData[i].push(...objVertexData[i][index]);
-  });
+  }
+  mtllib(parts, unparsedArgs) {
+    this.materialLibs.push(unparsedArgs);
+  }
+  usemtl(parts, unparsedArgs) {
+    this.material = unparsedArgs;
+    newGeometry(this.geomtery);
+  }
+  g(parts) {
+    this.groups = parts;
+    newGeometry(this.geometry);
+  }
+  o(parts, unparsedArgs) {
+    this.object = unparsedArgs;
+    newGeometry(this.geometry);
+  }
 }
 
 function parseObjectKeyword(text) {
-  const keywordRE = /(\w*)(?: )*(.*)/;
   const lines = text.split('\n');
-  for (let lineNo=0; lineNo<lines.length; ++lineNo){
+  const objectKeywords = new ObjectKeyWords();
+  for (let lineNo = 0; lineNo < lines.length; ++lineNo){
     const line = lines[lineNo].trim();
     if(line === '' || line.startsWith('#')){
       continue;
@@ -140,9 +125,48 @@ function parseObjectKeyword(text) {
       console.warn('unhandled keyword:', keyword, 'at line', lineNo + 1);
       continue;
     }
-    handler(parts, unparsedArgs);
+    objectKeywords[keyword](parts, unparsedArgs);
+  }
+  return objectKeywords;
+}
+  
+function addVertex(vert, objVertexData, webglVertexData) {
+  const ptn = vert.split('/');
+  ptn.forEach((objIndexStr, i) => {
+    if (!objIndexStr) {
+      return;
+    }
+    const objIndex = parseInt(objIndexStr);
+    const index = objIndex + (objIndex >= 0 ? 0 : objVertexData[i].length);
+    webglVertexData[i].push(...objVertexData[i][index]);
+  });
+}
+
+class Figure{
+  constructor(text){
+    /*const objHref = objName;
+    const response = fetch(objHref);
+    const text = response.text();*/
+
+    const objectKeywords = parseObjectKeyword(text);
+
+    this.geometries = objectKeywords.geometries;
+    this.materialLibs = objectKeywords.materialLibs;
+    console.log(this.geometries);
+    for (const geometry of this.geometries) {
+      geometry.data = Object.fromEntries(
+        Object.entries(geometry.data).filter(([, array]) => array.length > 0)
+      );
+    }
+    console.log(this.geometries);
   }
 }
+
+
+
+
+
+
 
 function parseOBJ(text) {
   // remove any arrays that have no entries.
@@ -439,4 +463,4 @@ function requestCORSIfNotSameOrigin(img, url) {
 }
 
 
-export {parseOBJ};
+export {parseOBJ, Figure};

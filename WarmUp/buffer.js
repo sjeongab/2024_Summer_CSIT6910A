@@ -12,7 +12,6 @@ function loadColourBuffer(gl, faceColours) {
         const c = faceColours[i];
         colours = colours.concat(c,c,c,c);
      }
-     console.log(colours);
      const colourBuffer = gl.createBuffer();
      gl.bindBuffer(gl.ARRAY_BUFFER, colourBuffer);
      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colours), gl.STATIC_DRAW);
@@ -36,6 +35,6 @@ class Buffer{
       //this.colourBuffer = loadColourBuffer(gl, faceColours);
       this.indexBuffer = loadIndexBuffer(gl, indices);
     }
-  }
+}
   
 export {Buffer};

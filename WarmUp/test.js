@@ -104,10 +104,10 @@ function parseOBJ(text) {
     v(parts) {
       // if there are more than 3 values here they are vertex colors
       if (parts.length > 3) {
-        objPositions.push(parts.slice(0, 3).map(parseFloat));
+        objVertexData[0].push(parts.slice(0, 3).map(parseFloat));
         objColors.push(parts.slice(3).map(parseFloat));
       } else {
-        objPositions.push(parts.map(parseFloat));
+        objVertexData[0].push(parts.map(parseFloat));
       }
     },
     vn(parts) {
@@ -168,11 +168,12 @@ function parseOBJ(text) {
   }
 
   // remove any arrays that have no entries.
+  console.log(geometry);
   for (const geometry of geometries) {
     geometry.data = Object.fromEntries(
         Object.entries(geometry.data).filter(([, array]) => array.length > 0));
   }
-
+  console.log(geometry);
   return {
     geometries,
     materialLibs,
@@ -219,9 +220,12 @@ function parseMTL(text) {
       continue;
     }
     const [, keyword, unparsedArgs] = m;
+    //console.log(keyword);
+    //console.log(typeof(keyword));
     const parts = line.split(/\s+/).slice(1);
     const handler = keywords[keyword];
     if (!handler) {
+      console.log(keyword)
       console.warn('unhandled keyword:', keyword);  // eslint-disable-line no-console
       continue;
     }
@@ -354,7 +358,6 @@ async function main() {
     shininess: 400,
     opacity: 1,
   };
-
   console.log(obj.geometries);
   const parts = obj.geometries.map(({material, data}) => {
     // Because data is just named arrays like this
@@ -383,7 +386,6 @@ async function main() {
     // create a buffer for each array by calling
     // gl.createBuffer, gl.bindBuffer, gl.bufferData
     const bufferInfo = twgl.createBufferInfoFromArrays(gl, data);
-    console.log(data);
     const vao = twgl.createVAOFromBufferInfo(gl, meshProgramInfo, bufferInfo);
     return {
       material: {
@@ -438,7 +440,6 @@ async function main() {
     0,
     radius,
   ]);
-  console.log(cameraPosition);
   // Set zNear and zFar to something hopefully appropriate
   // for the size of this object.
   const zNear = radius / 100;
@@ -483,7 +484,6 @@ async function main() {
     // compute the world matrix once since all parts
     // are at the same space.
     let u_world = m4.yRotation(time);
-    console.log(u_world);
     u_world = m4.translate(u_world, ...objOffset);
 
     for (const {bufferInfo, vao, material} of parts) {

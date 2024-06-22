@@ -1,7 +1,7 @@
 import {Shader} from "./shader.js";
 import {Buffer} from "./buffer.js";
 import {draw} from "./draw.js";
-import {parseOBJ} from "./loadObj.js";
+import {parseOBJ, Figure} from "./loadObj.js";
 
 const fpsElem = document.querySelector("#fps");
 
@@ -25,8 +25,10 @@ async function main() {
   const objHref = 'https://webgl2fundamentals.org/webgl/resources/models/windmill/windmill.obj';  
   const response = await fetch(objHref);
   const text = await response.text();
-  const obj = parseOBJ(text);
-  console.log(obj);
+  const figure = new Figure(text);
+  console.log(figure.geometries);
+  //const obj = parseOBJ(text);
+  //console.log(obj);
   const canvas = document.getElementById("canvas");
   const gl = canvas.getContext("webgl2", {antialias: false,});
   const shader = new Shader(gl);
