@@ -14,14 +14,10 @@
 ## SeathruNeRF
 ### TODO
 * Tensorflow GPU
-* Wandadb issue
-* Run code
-* Install Ninja
-* create Transform.json file
+* Install tinycudnn
 
 ## 3D Gaussian Splatting
 ### TODO
-* Literature review
 * Code re-implementation
 
 
@@ -84,3 +80,6 @@
 **[2024-06-22]**
   * 3DGS literature review: Optimization
   * WarmUp: Load OBJ
+
+**[2024-06-23]**
+  * Training SeathruNeRF via nerfstudio
