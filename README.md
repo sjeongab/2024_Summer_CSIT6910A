@@ -83,3 +83,10 @@
 
 **[2024-06-23]**
   * Training SeathruNeRF via nerfstudio
+
+**[2024-06-28]**
+  * Training SeathruNeRF via nerfstudio
+
+**[2024-06-29]**
+  * Render SeathruNeRF
+  
