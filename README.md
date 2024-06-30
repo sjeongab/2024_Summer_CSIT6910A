@@ -18,6 +18,7 @@
 
 ## 3D Gaussian Splatting
 ### TODO
+* Understand worker
 * Code re-implementation
 
 
@@ -89,4 +90,7 @@
 
 **[2024-06-29]**
   * Render SeathruNeRF
+
+**[2024-06-30]**
+  * 3DGS: code re-implementation start
   
