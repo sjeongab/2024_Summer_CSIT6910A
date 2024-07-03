@@ -1,0 +1,3 @@
+[nerfstudio.method_configs]
+seathru = seathru.seathru_config:seathru_method
+seathru2 = seathru.seathru_config:seathru_method_lite

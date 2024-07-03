@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: seathru-nerf
+Version: 0.0.1
+License-File: LICENSE.md
+Requires-Dist: nerfstudio>=0.3.4
+Requires-Dist: pytest
+Requires-Dist: pyright
+Requires-Dist: ruff
+Requires-Dist: black
+Requires-Dist: sphinx
+Requires-Dist: sphinx_rtd_theme
+Requires-Dist: sphinxcontrib-bibtex
+Requires-Dist: sphinxcontrib-video

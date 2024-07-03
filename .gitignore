@@ -1,5 +1,7 @@
 *.pyc
 .vscode
 output/
+outputs/
 data/
+media/
 *.Identifier

@@ -1,0 +1,9 @@
+nerfstudio>=0.3.4
+pytest
+pyright
+ruff
+black
+sphinx
+sphinx_rtd_theme
+sphinxcontrib-bibtex
+sphinxcontrib-video
