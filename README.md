@@ -18,8 +18,9 @@
 
 ## 3D Gaussian Splatting
 ### TODO
-* Understand worker
-* Code re-implementation
+* Code clean up
+* Add parameter for depth map and medium
+* Implement view-input MLP
 
 
 ## LOG
@@ -94,3 +95,8 @@
 **[2024-06-30]**
   * 3DGS: code re-implementation start
   
+**[2024-07-01]**
+  * Install 3DGS
+
+**[2024-07-02]**
+  * Install 3DGS and run

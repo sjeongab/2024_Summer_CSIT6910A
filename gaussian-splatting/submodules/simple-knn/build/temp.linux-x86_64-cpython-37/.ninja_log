@@ -1,0 +1,4 @@
+# ninja log v5
+0	8194	1719895412547992199	/home/cheri/gaussian-splatting/submodules/simple-knn/build/temp.linux-x86_64-cpython-37/simple_knn.o	8f5e7e96e17579ff
+0	17374	1719895421717989556	/home/cheri/gaussian-splatting/submodules/simple-knn/build/temp.linux-x86_64-cpython-37/ext.o	33cafcd99c224dc4
+0	42116	1719895446467985149	/home/cheri/gaussian-splatting/submodules/simple-knn/build/temp.linux-x86_64-cpython-37/spatial.o	7899eeac8081ead0
