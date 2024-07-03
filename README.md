@@ -99,4 +99,4 @@
   * Install 3DGS
 
 **[2024-07-02]**
-  * Install 3DGS and run
+  * Install and run 3DGS

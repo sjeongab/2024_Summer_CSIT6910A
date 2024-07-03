@@ -1,6 +1,0 @@
-# ninja log v5
-0	2279	1719894565578203871	/home/cheri/gaussian-splatting/submodules/diff-gaussian-rasterization/build/temp.linux-x86_64-cpython-37/cuda_rasterizer/backward.o	91444ea868ae46f7
-0	2333	1719894565638203861	/home/cheri/gaussian-splatting/submodules/diff-gaussian-rasterization/build/temp.linux-x86_64-cpython-37/cuda_rasterizer/forward.o	634b225930ab745d
-1	5868	1719894569168203238	/home/cheri/gaussian-splatting/submodules/diff-gaussian-rasterization/build/temp.linux-x86_64-cpython-37/cuda_rasterizer/rasterizer_impl.o	9c681a78c2cf5b34
-1	16933	1719894580228201325	/home/cheri/gaussian-splatting/submodules/diff-gaussian-rasterization/build/temp.linux-x86_64-cpython-37/ext.o	f00bf69433aeeebe
-1	40235	1719894603528198134	/home/cheri/gaussian-splatting/submodules/diff-gaussian-rasterization/build/temp.linux-x86_64-cpython-37/rasterize_points.o	c73045b8fb7ec8da
