@@ -10,17 +10,23 @@
 * Add controls to the viewer
 * Create CSS file
 * pass geometry object
+* Add how to
+* Add requirements
 
 ## SeathruNeRF
 ### TODO
 * Tensorflow GPU
 * Install tinycudnn
+* Add how to
+* Add requirements
 
 ## 3D Gaussian Splatting
 ### TODO
 * Code clean up
 * Add parameter for depth map and medium
 * Implement view-input MLP
+* Add requirements
+* WebGL: alpha calculate re-visit
 
 
 ## LOG
@@ -100,3 +106,9 @@
 
 **[2024-07-02]**
   * Install and run 3DGS
+
+**[2024-07-03]**
+  * Render fixed Seathru 3DGS
+
+**[2024-07-04]**
+  * Render fixed seathru 3DGS WebGL

@@ -700,7 +700,10 @@ void main () {
     vec2 majorAxis = min(sqrt(2.0 * lambda1), 1024.0) * diagonalVector;
     vec2 minorAxis = min(sqrt(2.0 * lambda2), 1024.0) * vec2(diagonalVector.y, -diagonalVector.x);
 
-    vColor = clamp(pos2d.z/pos2d.w+1.0, 0.0, 1.0) * vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
+    vec4 color = clamp(pos2d.z/pos2d.w+1.0, 0.0, 1.0) * vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
+    vec4 watercolor = vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
+
+    vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
     vPosition = position;
 
     vec2 vCenter = vec2(pos2d) / pos2d.w;
@@ -745,14 +748,15 @@ async function main() {
     const url = new URL(
         // "nike.splat",
         // location.href,
-        params.get("url") || "train.splat",
+        params.get("url") || "nike.splat",
         "https://huggingface.co/cakewalk/splat-data/resolve/main/",
     );
+
     const req = await fetch(url, {
         mode: "cors", // no-cors, *cors, same-origin
         credentials: "omit", // include, *same-origin, omit
     });
-    console.log(req);
+
     if (req.status != 200)
         throw new Error(req.status + " Unable to load " + req.url);
 
@@ -780,6 +784,8 @@ async function main() {
 
     const gl = canvas.getContext("webgl2", {
         antialias: false,
+        preserveDrawingBuffer: true,
+        premultipliedAlpha: true
     });
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -1334,6 +1340,7 @@ async function main() {
             document.getElementById("spinner").style.display = "none";
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
             gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.clearColor(1/255, 50/255, 32/255,0.5);
             gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
         } else {
             gl.clear(gl.COLOR_BUFFER_BIT);
