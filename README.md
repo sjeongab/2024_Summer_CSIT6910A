@@ -13,21 +13,15 @@
 * Add how to
 * Add requirements
 
-## SeathruNeRF
-### TODO
-* Tensorflow GPU
-* Install tinycudnn
-* Add how to
-* Add requirements
-
-## 3D Gaussian Splatting
+## 3D Gaussian Splatting SeathruNeRF
 ### TODO
 * Code clean up
 * Add parameter for depth map and medium
 * Implement view-input MLP
-* Add requirements
-* WebGL: alpha calculate re-visit
+* Add cam direction as input
 
+## Idea
+* Group watercolour by splatting group(at rasterization) to increase rendering speed?
 
 ## LOG
 **[2024-05-22]** 
@@ -112,3 +106,18 @@
 
 **[2024-07-04]**
   * Render fixed seathru 3DGS WebGL
+
+**[2024-07-04]**
+  * 3DGS with learnable medium variable
+
+**[2024-07-10]**
+  * Install tinycudnn
+
+**[2024-07-11]**
+  * 3DGS with learnable medium variable
+
+**[2024-07-12]**
+  * 3DGS with learnable medium variable
+
+**[2024-07-15]**
+  * MLP: Analysis on cam direction

@@ -26,6 +26,8 @@ from nerfstudio.model_components.ray_samplers import (
     ProposalNetworkSampler,
     UniformSampler,
 )
+from seathru.seathru_renderers import SeathruDepthRenderer
+from nerfstudio.utils.rich_utils import CONSOLE
 
 
 from seathru.seathru_field import SeathruField
@@ -33,7 +35,7 @@ from seathru.seathru_fieldheadnames import SeathruHeadNames
 from seathru.seathru_renderers import SeathruRGBRenderer
 from seathru.seathru_losses import acc_loss, recon_loss
 from seathru.seathru_utils import get_bayer_mask, save_debug_info, get_transmittance
-from seathru.seathru_renderers import SeathruDepthRenderer
+
 
 
 @dataclass

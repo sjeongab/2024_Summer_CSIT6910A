@@ -1,0 +1,7 @@
+(CSIT6910A) cheri@DESKTOP-CHERI:~/2024_Summer_CSIT6910A/seathru_NeRF$ ns-train seathru-nerf-lite --vis viewer+wandb colmap --data ./data/Panama --images-path images_wb
+ns-render interpolate --load-config ./outputs/unnamed/seathru-nerf-lite/2024-07-05_104625/config.yml --rendered-output-names rgb
+
+(CSIT6910A) cheri@DESKTOP-CHERI:~/2024_Summer_CSIT6910A/gaussian-splatting$ python train.py -s ~/2024_SUMMER_CSIT6910A/gaussian-splatting/data/lego/
+python render.py -m ~/2024_Summer_CSIT6910A/gaussian-splatting/output/f3a19fa6-c/
+
+(CSIT6910A) cheri@DESKTOP-CHERI:~/2024_Summer_CSIT6910A/gaussian-splatting$ python train.py -s ~/2024_Summer_CSIT6910A/gaussian-splatting/data/Panama/dense/

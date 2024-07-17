@@ -53,6 +53,8 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
     means3D = pc.get_xyz
     means2D = screenspace_points
     opacity = pc.get_opacity
+    medium_colour = pc.get_medium_colour
+    backscatter_coefficient = pc.get_backscatter_coefficient
 
     # If precomputed 3d covariance is provided, use it. If not, then it will be computed from
     # scaling / rotation by the rasterizer.
@@ -96,9 +98,8 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
     # They will be excluded from value updates used in the splitting criteria.
 
     #ADD water rendering with constant vector
-    sigma_med = 0.5
-    c_med = torch.tensor([1/255, 50/255, 32/255], device="cuda:0").reshape(3,1,1)*torch.ones(3,800,800, device="cuda:0")
-    water_image = torch.exp(-1*sigma_med*depth)*rendered_image + (1 - torch.exp(-1*sigma_med*depth))*c_med
+    c_med = medium_colour.reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
+    water_image = torch.exp(-1*backscatter_coefficient*depth)*rendered_image + (1 - torch.exp(-1*backscatter_coefficient*depth))*c_med
     return {"render": water_image,
             "viewspace_points": screenspace_points,
             "visibility_filter" : radii > 0,

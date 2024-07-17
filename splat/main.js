@@ -704,6 +704,7 @@ void main () {
     vec4 watercolor = vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
 
     vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
+    vColor = color;
     vPosition = position;
 
     vec2 vCenter = vec2(pos2d) / pos2d.w;
@@ -1340,7 +1341,7 @@ async function main() {
             document.getElementById("spinner").style.display = "none";
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
             gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.clearColor(1/255, 50/255, 32/255,0.5);
+            //gl.clearColor(1/255, 50/255, 32/255,0.5);
             gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
         } else {
             gl.clear(gl.COLOR_BUFFER_BIT);

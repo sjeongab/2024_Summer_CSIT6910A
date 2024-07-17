@@ -202,6 +202,7 @@ class SeathruField(Field):
         outputs = {}
 
         # Encode directions
+        print("hello")
         directions = get_normalized_directions(ray_samples.frustums.directions)
         directions_flat = directions.view(-1, 3)
         directions_encoded = self.direction_encoding(directions_flat)

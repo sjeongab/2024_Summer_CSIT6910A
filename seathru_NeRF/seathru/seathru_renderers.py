@@ -45,10 +45,12 @@ class SeathruRGBRenderer(nn.Module):
             Rendered pixel colour (and direct, bs, and J if using new rendering
             equations and not training).
         """
-
+        print(medium_attn)
+        print(medium_attn.shape)
         # Old rendering equations
         if not self.use_new_rendering_eqs:
             s = ray_samples.frustums.starts
+            
 
             # Object RGB
             attn_component = torch.exp(-medium_attn * s)
