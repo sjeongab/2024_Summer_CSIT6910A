@@ -16,7 +16,7 @@ from random import randint
 from utils.loss_utils import l1_loss, ssim
 from gaussian_renderer import render, network_gui
 import sys
-from scene import Scene, GaussianModel
+from scene import Scene, GaussianModel, MediumModel
 from utils.general_utils import safe_state
 import uuid
 from tqdm import tqdm
@@ -33,7 +33,9 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
     gaussians = GaussianModel(dataset.sh_degree)
-    scene = Scene(dataset, gaussians)
+    medium = MediumModel()
+
+    scene = Scene(dataset, gaussians, medium)
 
     gaussians.training_setup(opt)
     if checkpoint:
@@ -58,7 +60,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                 net_image_bytes = None
                 custom_cam, do_training, pipe.convert_SHs_python, pipe.compute_cov3D_python, keep_alive, scaling_modifer = network_gui.receive()
                 if custom_cam != None:
-                    net_image = render(custom_cam, gaussians, pipe, background, scaling_modifer)["render"]
+                    net_image = render(custom_cam, gaussians, medium, pipe, background, scaling_modifer)["render"]
                     net_image_bytes = memoryview((torch.clamp(net_image, min=0, max=1.0) * 255).byte().permute(1, 2, 0).contiguous().cpu().numpy())
                 network_gui.send(net_image_bytes, dataset.source_path)
                 if do_training and ((iteration < int(opt.iterations)) or not keep_alive):
@@ -78,11 +80,11 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         if not viewpoint_stack:
             viewpoint_stack = scene.getTrainCameras().copy()
         viewpoint_cam = viewpoint_stack.pop(randint(0, len(viewpoint_stack)-1))
-        print(viewpoint_cam.world_view_transform)
-        print(viewpoint_cam.world_view_transform.T)
+        """print(viewpoint_cam.projection_matrix)
         print(viewpoint_cam.world_view_transform.T[2])
-        
-        break
+        if iteration == 10:
+            break"""
+        view_direction = [viewpoint_cam.world_view_transform.T[2]]
 
         # Render
         if (iteration - 1) == debug_from:
@@ -90,7 +92,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
         bg = torch.rand((3), device="cuda") if opt.random_background else background
 
-        render_pkg = render(viewpoint_cam, gaussians, pipe, bg)
+        render_pkg = render(viewpoint_cam, gaussians, medium, pipe, bg)
         image, viewspace_point_tensor, visibility_filter, radii, depth = render_pkg["render"], render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"], render_pkg["depth"]
 
         # Loss
@@ -99,8 +101,12 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         #Ld1 = l1_loss(gt_image_depth, depth)
         Ll1 = l1_loss(image, gt_image)
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
+        #TODO: apply loss backward to medium model
+        #print(loss)
         #depth_loss = (1.0 - opt.lambda_dssim) * Ld1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
         loss.backward()
+        #print(loss.backward)
+        #break
         #depth_loss.backward(retain_graph=True)
 
         iter_end.record()
@@ -141,7 +147,11 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
             if (iteration in checkpoint_iterations):
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
-                torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt" + str(iteration) + ".pth")
+                print(scene.model_path)
+                #TODO fix chkpnt save args
+                torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt_gaussian_" + str(iteration) + ".pth")
+                #save medium model
+                torch.save(medium.state_dict(), scene.model_path + "/chkpnt_medium_" + str(iteration))
 
 def prepare_output_and_logger(args):    
     if not args.model_path:
@@ -181,25 +191,22 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
         for config in validation_configs:
             if config['cameras'] and len(config['cameras']) > 0:
                 l1_test = 0.0
-                #depth_loss_test = 0.0
                 psnr_test = 0.0
                 for idx, viewpoint in enumerate(config['cameras']):
-                    image = torch.clamp(renderFunc(viewpoint, scene.gaussians, *renderArgs)["render"], 0.0, 1.0)
+                    #Q: is trained scene.medium loaded?
+                    image = torch.clamp(renderFunc(viewpoint, scene.gaussians, scene.medium, *renderArgs)["render"], 0.0, 1.0)
                     gt_image = torch.clamp(viewpoint.original_image.to("cuda"), 0.0, 1.0)
                     if tb_writer and (idx < 5):
                         tb_writer.add_images(config['name'] + "_view_{}/render".format(viewpoint.image_name), image[None], global_step=iteration)
                         if iteration == testing_iterations[0]:
                             tb_writer.add_images(config['name'] + "_view_{}/ground_truth".format(viewpoint.image_name), gt_image[None], global_step=iteration)
                     l1_test += l1_loss(image, gt_image).mean().double()
-                    #depth_loss_test += l1_loss(torch.nn.functional.normalize(image), torch.nn.functional.normalize(gt_image))
                     psnr_test += psnr(image, gt_image).mean().double()
                 psnr_test /= len(config['cameras'])
-                l1_test /= len(config['cameras']) 
-                #depth_loss_test /= len(config['cameras'])          
+                l1_test /= len(config['cameras'])    
                 print("\n[ITER {}] Evaluating {}: L1 {} PSNR {}".format(iteration, config['name'], l1_test, psnr_test))
                 if tb_writer:
                     tb_writer.add_scalar(config['name'] + '/loss_viewpoint - l1_loss', l1_test, iteration)
-                    #tb_writer.add_scalar(config['name'] + '/loss_viewpoint - depth_loss_test', depth_loss_test, iteration)
 
 
         if tb_writer:

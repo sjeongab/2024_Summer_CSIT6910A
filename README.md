@@ -16,9 +16,11 @@
 ## 3D Gaussian Splatting SeathruNeRF
 ### TODO
 * Code clean up
-* Add parameter for depth map and medium
-* Implement view-input MLP
-* Add cam direction as input
+* Analysis on wrong watercolour (high R)
+* Add parameter for medium training and rendering
+* Analysis on loss backward
+* check z parameter when object is missing
+
 
 ## Idea
 * Group watercolour by splatting group(at rasterization) to increase rendering speed?
@@ -121,3 +123,18 @@
 
 **[2024-07-15]**
   * MLP: Analysis on cam direction
+
+**[2024-07-16]**
+  * MLP: Analysis on cam input
+
+**[2024-07-17]**
+  * Set up Medium MLP model
+
+**[2024-07-18]**
+  * MLP: Analysis on Medium model output, batch size
+
+**[2024-07-20]**
+  * Fix Medium MLP model input
+
+**[2024-07-21]**
+  * Run 3DGS model with MLP model

@@ -202,7 +202,6 @@ class SeathruField(Field):
         outputs = {}
 
         # Encode directions
-        print("hello")
         directions = get_normalized_directions(ray_samples.frustums.directions)
         directions_flat = directions.view(-1, 3)
         directions_encoded = self.direction_encoding(directions_flat)
@@ -244,5 +243,7 @@ class SeathruField(Field):
         outputs[SeathruHeadNames.MEDIUM_RGB] = medium_rgb
         outputs[SeathruHeadNames.MEDIUM_BS] = medium_bs
         outputs[SeathruHeadNames.MEDIUM_ATTN] = medium_attn
-
+        print(outputs)
+        print(outputs.shape)
+        print("seathru_field 247")
         return outputs
