@@ -33,7 +33,8 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
     gaussians = GaussianModel(dataset.sh_degree)
-    medium = MediumModel()
+    medium = MediumModel().to("cuda")
+    medium.train()
 
     scene = Scene(dataset, gaussians, medium)
 
@@ -80,11 +81,6 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         if not viewpoint_stack:
             viewpoint_stack = scene.getTrainCameras().copy()
         viewpoint_cam = viewpoint_stack.pop(randint(0, len(viewpoint_stack)-1))
-        """print(viewpoint_cam.projection_matrix)
-        print(viewpoint_cam.world_view_transform.T[2])
-        if iteration == 10:
-            break"""
-        view_direction = [viewpoint_cam.world_view_transform.T[2]]
 
         # Render
         if (iteration - 1) == debug_from:
@@ -97,17 +93,11 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
         # Loss
         gt_image = viewpoint_cam.original_image.cuda()
-        #gt_image_depth = torch.nn.functional.normalize(gt_image)
-        #Ld1 = l1_loss(gt_image_depth, depth)
         Ll1 = l1_loss(image, gt_image)
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
         #TODO: apply loss backward to medium model
-        #print(loss)
-        #depth_loss = (1.0 - opt.lambda_dssim) * Ld1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
         loss.backward()
-        #print(loss.backward)
-        #break
-        #depth_loss.backward(retain_graph=True)
+
 
         iter_end.record()
 
@@ -144,10 +134,11 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
             if iteration < opt.iterations:
                 gaussians.optimizer.step()
                 gaussians.optimizer.zero_grad(set_to_none = True)
+                medium.optimizer.step()
+                medium.optimizer.zero_grad(set_to_none = True)
 
             if (iteration in checkpoint_iterations):
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
-                print(scene.model_path)
                 #TODO fix chkpnt save args
                 torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt_gaussian_" + str(iteration) + ".pth")
                 #save medium model

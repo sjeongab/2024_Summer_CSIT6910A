@@ -54,8 +54,6 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_c
     means3D = pc.get_xyz
     means2D = screenspace_points
     opacity = pc.get_opacity
-    #medium_colour = pc.get_medium_colour
-    #backscatter_coefficient = pc.get_backscatter_coefficient
 
     # If precomputed 3d covariance is provided, use it. If not, then it will be computed from
     # scaling / rotation by the rasterizer.
@@ -99,20 +97,19 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_c
     # They will be excluded from value updates used in the splitting criteria.
 
     #Medium calculation
-    #print(viewpoint_camera.camera_center.shape)
-    #print(pc.get_features.shape)
-    directions = viewpoint_camera.camera_center.reshape(1,3)#.repeat(rendered_image.shape[0], 1)#torch.tensor(viewpoint_camera.world_view_transform.T[2], device="cuda")
-    #print(directions.shape)
-    #medium_outputs = medium.forward(directions)
-    #print(medium_outputs["medium_colour"])
-    #print(medium_outputs["medium_bs"].shape)
-    #print(depth.shape)
-    #print(rendered_image.shape)
-    #c_med = medium_outputs["medium_colour"].reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
-    #print(medium_outputs["medium_colour"])
-    #print(medium_outputs["medium_bs"])
-    #water_image = torch.exp(-1*medium_outputs["medium_bs"]*depth)*rendered_image + (1 - torch.exp(-1*medium_outputs["medium_bs"]*depth))*c_med
-    return {"render": rendered_image, #c_med,
+    medium_outputs = medium.get_output(viewpoint_camera)
+    medium_colour = medium_outputs["medium_rgb"].reshape(rendered_image.shape)#.mean(dim=1).mean(dim=1).reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
+    #medium_outputs["medium_rgb"].reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
+    #medium_outputs["medium_rgb"].reshape(rendered_image.shape)
+    #torch.tensor([1/255, 50/255, 32/255], device="cuda").reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")#(1,rendered_image.shape[1], rendered_image.shape[2])
+    #repeat(1,rendered_image.shape[1], rendered_image.shape[2]) #medium_outputs["medium_colour"].reshape(rendered_image.shape)
+    medium_bs = medium_outputs["medium_bs"].reshape(rendered_image.shape)
+    #print((torch.nn.functional.normalize(medium_colour)+1)/2.0)
+    #print(medium_outputs)
+    z = depth.repeat(3,1,1)
+    #return
+    water_image = torch.exp(-1*medium_bs*z)*rendered_image + (1 - torch.exp(-1*medium_bs*z))*medium_colour
+    return {"render": water_image,
             "viewspace_points": screenspace_points,
             "visibility_filter" : radii > 0,
             "radii": radii,

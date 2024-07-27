@@ -1,76 +1,64 @@
 import torch
+import math
+import numpy as np
 import os
-from typing import Dict, Literal
 from utils.system_utils import mkdir_p
-from nerfstudio.field_components.encodings import HashEncoding, SHEncoding
-from nerfstudio.field_components.mlp import MLP
 
 class MediumModel(torch.nn.Module):
-    def __init__(self,
-                 implementation: Literal["tcnn", "torch"] = "tcnn",
-                 num_layers_medium: int = 2,
-                 hidden_dim_medium: int = 128,
-                 medium_density_bias: float = 0.0,
-                 ):
-        super().__init__()
+    def __init__(self):
+        super(MediumModel, self).__init__()
+        self.in_dim = 6
+        self.out_dim = 6
+        self.layer_width = 128
+        self.activation = torch.nn.Softplus()
+        self.out_activation = torch.nn.Sigmoid()
 
-        self.medium_colour = torch.tensor([1/255, 50/255, 32/255], device="cuda")
-        self.medium_density_bias = medium_density_bias
-        #self.direction_encoding = SHEncoding(levels=4, implementation=implementation)
-        self.colour_activation = torch.nn.Sigmoid()
-        self.sigma_activation = torch.nn.Softplus()
-        #print(self.direction_encoding.get_out_dim())
-        #print("medium_model 21")
-        self.medium_mlp = MLP(
-            in_dim = 3, #self.direction_encoding.get_out_dim(),
-            num_layers=num_layers_medium,
-            layer_width=hidden_dim_medium,
-            out_dim=4,
-            activation=torch.nn.Softplus(),
-            out_activation=None,
-            implementation=implementation,
-        )
+        layers = []
+        layers.append(torch.nn.Linear(self.in_dim, self.layer_width))
+        #layers.append(torch.nn.Linear(self.layer_width, self.layer_width))
+        layers.append(torch.nn.Linear(self.layer_width, self.out_dim))
+        for name, param in self.named_parameters():
+            if param.requires_grad:
+                print (name, param.data)
 
-    def get_outputs(self, directions):
-        #TODO: add cam_dir encoding?
+        #self.colour = torch.tensor([])
+        #self.backscatter = torch.tensor([])
+        self.layers = torch.nn.ModuleList(layers)
+        self.optimizer = torch.optim.Adam(self.parameters(), lr=0.0, eps=1e-15)
 
-        outputs = {}
-        medium_base_out = self.medium_mlp(directions)
+    #TODO: revisit calculate_directions
+    def calculate_directions(self, camera):
+        focal_length_x = math.tan(camera.FoVx * 0.5)
+        focal_length_y = math.tan(camera.FoVy * 0.5)
+        W = camera.image_width
+        H = camera.image_height
+        i, j = np.meshgrid(np.arange(W, dtype=np.float32), np.arange(H, dtype=np.float32), indexing='xy')
+        dirs = torch.tensor(np.stack([(i-W*.5)/focal_length_x, -(j-H*.5)/focal_length_y, -np.ones_like(i)], -1), device="cuda")
+        rays_d = torch.sum(dirs[..., np.newaxis, :] * camera.world_view_transform[:3, :3], -1)
 
-        medium_rgb = (
-            self.colour_activation(medium_base_out[..., :3])
-            #.view(*outputs_shape, -1)
-            .to(directions)
-        )
-        medium_bs = (
-            self.sigma_activation(medium_base_out[..., 3] + self.medium_density_bias)
-            #.view(*outputs_shape, -1)
-            .to(directions)
-        )
-        """medium_attn = (
-            self.sigma_activation(medium_base_out[..., 6:] + self.medium_density_bias)
-            .view(*outputs_shape, -1)
-            .to(directions)
-        )"""
-
-        outputs["medium_colour"] = medium_rgb
-        outputs["medium_bs"] = medium_bs
-        #outputs[SeathruHeadNames.MEDIUM_ATTN] = medium_attn
-
-        return outputs
+        #directions = get_normalized_directions(torch.nn.functional.normalize(rays_d))
+        #directions_flat = directions.view(-1, 3)
+        #directions_encoded = self.direction_encoding(directions_flat)
+        #return directions_encoded
+        rays_o = camera.camera_center.repeat((rays_d.shape[0], rays_d.shape[1], 1))
+        return torch.cat((rays_o, rays_d), dim=-1)
     
-    def forward(self, directions):
-        """base_field"""
-        """if compute_normals:
-            with torch.enable_grad():
-                density, density_embedding = self.get_density(ray_samples)
-        else:
-            density, density_embedding = self.get_density(ray_samples)"""
-
-        field_outputs = self.get_outputs(directions)
-
-        return field_outputs
+    def forward(self, camera):
+        x = self.calculate_directions(camera)
+        for i, layer in enumerate(self.layers):
+            x = layer(x)
+            if self.activation is not None and i < len(self.layers) - 1:
+                x = self.activation(x)
+        if self.out_activation is not None:
+            x = self.out_activation(x)
+        return x
     
+    def get_output(self, camera):
+        output = self.forward(camera)
+        colour = output[:, :, :3]
+        backscatter = output[:, :, 3:]
+        return {"medium_rgb": colour, "medium_bs": backscatter}
+
     def save(self, path):
         mkdir_p(os.path.dirname(path))
         torch.save(self.state_dict(), path)

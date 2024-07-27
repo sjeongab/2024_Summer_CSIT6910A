@@ -20,6 +20,7 @@
 * Add parameter for medium training and rendering
 * Analysis on loss backward
 * check z parameter when object is missing
+* Add optimization to Medium MLP
 
 
 ## Idea

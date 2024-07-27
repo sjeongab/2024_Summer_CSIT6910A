@@ -243,7 +243,7 @@ class SeathruField(Field):
         outputs[SeathruHeadNames.MEDIUM_RGB] = medium_rgb
         outputs[SeathruHeadNames.MEDIUM_BS] = medium_bs
         outputs[SeathruHeadNames.MEDIUM_ATTN] = medium_attn
-        print(outputs)
-        print(outputs.shape)
-        print("seathru_field 247")
+        #print(outputs)
+        #print(outputs.shape)
+        #print("seathru_field 247")
         return outputs

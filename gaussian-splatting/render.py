@@ -37,10 +37,10 @@ def render_set(model_path, name, iteration, views, gaussians, medium, pipeline, 
 
 def render_sets(dataset : ModelParams, iteration : int, pipeline : PipelineParams, skip_train : bool, skip_test : bool):
     with torch.no_grad():
-        #print(dataset.model_path)
         gaussians = GaussianModel(dataset.sh_degree)
-        medium = MediumModel()
-        #medium.load_state_dict(torch.load(os.path.join(dataset.model_path, "chkpnt_medium_800")))
+        medium = MediumModel().to("cuda")
+        medium.eval()
+        #medium = None
         scene = Scene(dataset, gaussians, medium, load_iteration=iteration, shuffle=False)
 
         bg_color = [255, 255, 255] if dataset.white_background else [0, 0, 0]

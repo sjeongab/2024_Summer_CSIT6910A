@@ -81,11 +81,13 @@ class Scene:
                                                            "point_cloud",
                                                            "iteration_" + str(self.loaded_iter),
                                                            "point_cloud.ply"))
-            self.medium.load(os.path.join(self.model_path, "medium_model/model_{}".format(self.loaded_iter)))
+            if self.medium != None:
+                self.medium.load(os.path.join(self.model_path, "medium_model/model_{}".format(self.loaded_iter)))
             #TODO: load medium model too?
             #self.medium.load_state_dict(torch.load(os.path.join(self.model_path, ))
         else:
-            self.gaussians.create_from_pcd(scene_info.point_cloud, self.cameras_extent)
+            #self.gaussians.create_from_pcd(scene_info.point_cloud, self.cameras_extent)
+            self.gaussians.create_from_scratch(scene_info.point_cloud, self.cameras_extent)
 
     def save(self, iteration):
         point_cloud_path = os.path.join(self.model_path, "point_cloud/iteration_{}".format(iteration))
