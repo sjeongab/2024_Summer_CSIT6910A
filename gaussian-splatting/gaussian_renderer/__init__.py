@@ -98,7 +98,9 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_c
 
     #Medium calculation
     medium_outputs = medium.get_output(viewpoint_camera)
-    medium_colour = medium_outputs["medium_rgb"].reshape(rendered_image.shape)#.mean(dim=1).mean(dim=1).reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
+    medium_colour = medium_outputs["medium_rgb"].reshape(rendered_image.shape)
+    medium_colour = medium_colour.mean(dim=1).mean(dim=1)
+    medium_colour = medium_colour.reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
     #medium_outputs["medium_rgb"].reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
     #medium_outputs["medium_rgb"].reshape(rendered_image.shape)
     #torch.tensor([1/255, 50/255, 32/255], device="cuda").reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")#(1,rendered_image.shape[1], rendered_image.shape[2])

@@ -139,3 +139,18 @@
 
 **[2024-07-21]**
   * Run 3DGS model with MLP model
+
+**[2024-07-22]**
+  * Re-construct camera input
+
+**[2024-07-23]**
+  * New medium model with torch.nn
+
+**[2024-07-25]**
+  * New medium model using mean
+
+**[2024-07-26]**
+  * Gaussian splatting from scratch
+
+**[2024-07-27]**
+  * New medium model using permute - training time bottleneck

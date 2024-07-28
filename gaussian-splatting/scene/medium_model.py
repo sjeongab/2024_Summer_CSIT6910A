@@ -55,8 +55,8 @@ class MediumModel(torch.nn.Module):
     
     def get_output(self, camera):
         output = self.forward(camera)
-        colour = output[:, :, :3]
-        backscatter = output[:, :, 3:]
+        colour = output[:, :, :3]#.mean(dim=0).mean(dim=0)#.permute([2,0,1])
+        backscatter = output[:, :, 3:]#.permute([2,0,1])
         return {"medium_rgb": colour, "medium_bs": backscatter}
 
     def save(self, path):

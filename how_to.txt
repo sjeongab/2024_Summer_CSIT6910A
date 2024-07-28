@@ -7,3 +7,7 @@ python render.py -m ~/2024_Summer_CSIT6910A/gaussian-splatting/output/f3a19fa6-c
 (CSIT6910A) cheri@DESKTOP-CHERI:~/2024_Summer_CSIT6910A/gaussian-splatting$ python train.py -s ~/2024_Summer_CSIT6910A/gaussian-splatting/data/Panama/dense/
 
 ps -ef | grep python
+
+-transpose
+-without pcd
+-retry mean
