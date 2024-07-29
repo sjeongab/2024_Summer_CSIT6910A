@@ -13,10 +13,11 @@ import torch
 import math
 from diff_gaussian_rasterization import GaussianRasterizationSettings, GaussianRasterizer
 from scene.gaussian_model import GaussianModel
-from scene.medium_model import MediumModel
+from scene.medium_model import MediumModel, MediumTcnnModel
 from utils.sh_utils import eval_sh
 
-def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None):
+#def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None):
+def render(viewpoint_camera, pc : GaussianModel, medium: MediumTcnnModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None):
     """
     Render the scene. 
     
@@ -98,18 +99,9 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_c
 
     #Medium calculation
     medium_outputs = medium.get_output(viewpoint_camera)
-    medium_colour = medium_outputs["medium_rgb"].reshape(rendered_image.shape)
-    medium_colour = medium_colour.mean(dim=1).mean(dim=1)
-    medium_colour = medium_colour.reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
-    #medium_outputs["medium_rgb"].reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")
-    #medium_outputs["medium_rgb"].reshape(rendered_image.shape)
-    #torch.tensor([1/255, 50/255, 32/255], device="cuda").reshape(3,1,1)*torch.ones(rendered_image.shape, device="cuda:0")#(1,rendered_image.shape[1], rendered_image.shape[2])
-    #repeat(1,rendered_image.shape[1], rendered_image.shape[2]) #medium_outputs["medium_colour"].reshape(rendered_image.shape)
-    medium_bs = medium_outputs["medium_bs"].reshape(rendered_image.shape)
-    #print((torch.nn.functional.normalize(medium_colour)+1)/2.0)
-    #print(medium_outputs)
+    medium_colour = medium_outputs["medium_rgb"]
+    medium_bs = medium_outputs["medium_bs"]
     z = depth.repeat(3,1,1)
-    #return
     water_image = torch.exp(-1*medium_bs*z)*rendered_image + (1 - torch.exp(-1*medium_bs*z))*medium_colour
     return {"render": water_image,
             "viewspace_points": screenspace_points,

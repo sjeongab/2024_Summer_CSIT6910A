@@ -16,7 +16,7 @@ from random import randint
 from utils.loss_utils import l1_loss, ssim
 from gaussian_renderer import render, network_gui
 import sys
-from scene import Scene, GaussianModel, MediumModel
+from scene import Scene, GaussianModel, MediumModel, MediumTcnnModel
 from utils.general_utils import safe_state
 import uuid
 from tqdm import tqdm
@@ -33,7 +33,8 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
     gaussians = GaussianModel(dataset.sh_degree)
-    medium = MediumModel().to("cuda")
+    #medium = MediumModel().to("cuda")
+    medium = MediumTcnnModel().to("cuda")
     medium.train()
 
     scene = Scene(dataset, gaussians, medium)
@@ -53,7 +54,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
     ema_loss_for_log = 0.0
     progress_bar = tqdm(range(first_iter, opt.iterations), desc="Training progress")
     first_iter += 1
-    for iteration in range(first_iter, opt.iterations + 1):        
+    for iteration in range(first_iter, opt.iterations + 1):   
         if network_gui.conn == None:
             network_gui.try_connect()
         while network_gui.conn != None:
@@ -95,7 +96,6 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         gt_image = viewpoint_cam.original_image.cuda()
         Ll1 = l1_loss(image, gt_image)
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
-        #TODO: apply loss backward to medium model
         loss.backward()
 
 
@@ -135,13 +135,11 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                 gaussians.optimizer.step()
                 gaussians.optimizer.zero_grad(set_to_none = True)
                 medium.optimizer.step()
-                medium.optimizer.zero_grad(set_to_none = True)
 
             if (iteration in checkpoint_iterations):
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
                 #TODO fix chkpnt save args
                 torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt_gaussian_" + str(iteration) + ".pth")
-                #save medium model
                 torch.save(medium.state_dict(), scene.model_path + "/chkpnt_medium_" + str(iteration))
 
 def prepare_output_and_logger(args):    
@@ -170,7 +168,6 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
     if tb_writer:
         tb_writer.add_scalar('train_loss_patches/l1_loss', Ll1.item(), iteration)
         tb_writer.add_scalar('train_loss_patches/total_loss', loss.item(), iteration)
-        #tb_writer.add_scalar('train_loss_patches/depth_loss', depth_loss.item(), iteration)
         tb_writer.add_scalar('iter_time', elapsed, iteration)
 
     # Report test and samples of training set
@@ -184,7 +181,6 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
                 l1_test = 0.0
                 psnr_test = 0.0
                 for idx, viewpoint in enumerate(config['cameras']):
-                    #Q: is trained scene.medium loaded?
                     image = torch.clamp(renderFunc(viewpoint, scene.gaussians, scene.medium, *renderArgs)["render"], 0.0, 1.0)
                     gt_image = torch.clamp(viewpoint.original_image.to("cuda"), 0.0, 1.0)
                     if tb_writer and (idx < 5):

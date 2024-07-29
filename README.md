@@ -16,12 +16,13 @@
 ## 3D Gaussian Splatting SeathruNeRF
 ### TODO
 * Code clean up
-* Analysis on wrong watercolour (high R)
 * Add parameter for medium training and rendering
-* Analysis on loss backward
-* check z parameter when object is missing
-* Add optimization to Medium MLP
-
+* Load model in WebGL (Onnx)
+* SH Encoding
+* Replace permute with reshape/torch.view+to
+* Tcnn - add optimizer (nerfstudio/engine/trainer, optimizers)
+* Add Tcnn
+* Test MediumModel with different parameters
 
 ## Idea
 * Group watercolour by splatting group(at rasterization) to increase rendering speed?
@@ -148,9 +149,17 @@
 
 **[2024-07-25]**
   * New medium model using mean
+  * Add optimization
 
 **[2024-07-26]**
   * Gaussian splatting from scratch
 
 **[2024-07-27]**
-  * New medium model using permute - training time bottleneck
+  * Medium model using permute - training time bottleneck
+
+**[2024-07-28]**
+  * New medium model: remove Softplus, cam direction normalized
+
+**[2024-07-29]**
+  * New medium model: try with different parameters
+  * Tcnn model migration
