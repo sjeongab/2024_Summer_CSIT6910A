@@ -18,11 +18,10 @@
 * Code clean up
 * Add parameter for medium training and rendering
 * Load model in WebGL (Onnx)
-* SH Encoding
 * Replace permute with reshape/torch.view+to
 * Tcnn - add optimizer (nerfstudio/engine/trainer, optimizers)
-* Add Tcnn
 * Test MediumModel with different parameters
+* Add colour bias
 
 ## Idea
 * Group watercolour by splatting group(at rasterization) to increase rendering speed?
@@ -163,3 +162,7 @@
 **[2024-07-29]**
   * New medium model: try with different parameters
   * Tcnn model migration
+
+**[2024-07-30]**
+  * Tcnn model migration
+  * Test on 50_000 iteration - bad
