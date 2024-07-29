@@ -15,16 +15,18 @@ import json
 from utils.system_utils import searchForMaxIteration
 from scene.dataset_readers import sceneLoadTypeCallbacks
 from scene.gaussian_model import GaussianModel
-from scene.medium_model import MediumModel
+from scene.medium_model import MediumModel, MediumTcnnModel
 from arguments import ModelParams
 from utils.camera_utils import cameraList_from_camInfos, camera_to_JSON
 
 class Scene:
 
     gaussians : GaussianModel
-    medium : MediumModel
+    #medium : MediumModel
+    medium: MediumTcnnModel
 
-    def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
+    #def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
+    def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumTcnnModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
         """
         :param path: Path to colmap scene main folder.
         """

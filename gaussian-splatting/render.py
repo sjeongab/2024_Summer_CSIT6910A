@@ -20,7 +20,7 @@ import torchvision
 from utils.general_utils import safe_state
 from argparse import ArgumentParser
 from arguments import ModelParams, PipelineParams, get_combined_args
-from gaussian_renderer import GaussianModel, MediumModel
+from gaussian_renderer import GaussianModel, MediumModel, MediumTcnnModel
 
 def render_set(model_path, name, iteration, views, gaussians, medium, pipeline, background):
     render_path = os.path.join(model_path, name, "ours_{}".format(iteration), "renders")
@@ -38,9 +38,10 @@ def render_set(model_path, name, iteration, views, gaussians, medium, pipeline, 
 def render_sets(dataset : ModelParams, iteration : int, pipeline : PipelineParams, skip_train : bool, skip_test : bool):
     with torch.no_grad():
         gaussians = GaussianModel(dataset.sh_degree)
-        medium = MediumModel().to("cuda")
+        #medium = MediumModel().to("cuda")
+        medium = MediumTcnnModel().to("cuda")
         medium.eval()
-        #medium = None
+        
         scene = Scene(dataset, gaussians, medium, load_iteration=iteration, shuffle=False)
 
         bg_color = [255, 255, 255] if dataset.white_background else [0, 0, 0]
