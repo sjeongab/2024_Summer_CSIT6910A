@@ -196,8 +196,6 @@ class GaussianModel:
             {'params': [self._opacity], 'lr': training_args.opacity_lr, "name": "opacity"},
             {'params': [self._scaling], 'lr': training_args.scaling_lr, "name": "scaling"},
             {'params': [self._rotation], 'lr': training_args.rotation_lr, "name": "rotation"},
-            #{'params': [self.medium_colour], 'lr': training_args.medium_colour_lr, "name": "medium_colour"},
-            #{'params': [self.backscatter_coefficient], 'lr': training_args.backscatter_coefficient_lr, "name": "backscatter_coefficient"},
         ]
 
         self.optimizer = torch.optim.Adam(l, lr=0.0, eps=1e-15)

@@ -19,9 +19,13 @@
 * Add parameter for medium training and rendering
 * Load model in WebGL (Onnx)
 * Test MediumModel with different parameters
+* Add L2 loss
+* Store output as datetime
 
 ## Idea
 * Group watercolour by splatting group(at rasterization) to increase rendering speed?
+* AdaBoost?
+* GAN?
 
 ## LOG
 **[2024-05-22]** 
