@@ -355,15 +355,11 @@ class GaussianModel:
         self._opacity = optimizable_tensors["opacity"]
         self._scaling = optimizable_tensors["scaling"]
         self._rotation = optimizable_tensors["rotation"]
-        #self.medium_colour = optimizable_tensors["medium_colour"]
-        #self.backscatter_coefficient = optimizable_tensors["backscatter_coefficient"]
 
         self.xyz_gradient_accum = self.xyz_gradient_accum[valid_points_mask]
 
         self.denom = self.denom[valid_points_mask]
         self.max_radii2D = self.max_radii2D[valid_points_mask]
-        #self.medium_colour = self.medium_colour[valid_points_mask]
-        #self.backscatter_coefficient = self.backscatter_coefficient[valid_points_mask]
 
     def cat_tensors_to_optimizer(self, tensors_dict):
         optimizable_tensors = {}

@@ -76,8 +76,8 @@ class MediumTcnnModel(torch.nn.Module):
         self.out_activation = torch.nn.Sigmoid()
         self.colour_bias = torch.tensor([0, 0, 20/255], device="cuda")
 
-        colour = torch.tensor([])
-        backscatter = torch.tensor([])
+        colour = torch.tensor([], device="cuda")
+        backscatter = torch.tensor([], device="cuda")
         self._colour = torch.nn.Parameter(colour.requires_grad_(True))
         self._backscatter = torch.nn.Parameter(backscatter.requires_grad_(True))
 
