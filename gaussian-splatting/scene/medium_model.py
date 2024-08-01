@@ -74,7 +74,7 @@ class MediumTcnnModel(torch.nn.Module):
         self.layer_width = 128
         self.activation = torch.nn.Softplus()
         self.out_activation = torch.nn.Sigmoid()
-        self.colour_bias = torch.tensor([0, 0, 20/255], device="cuda")
+        self.colour_bias = torch.tensor([0.0, 0.0, 0.2], device="cuda")
 
         colour = torch.tensor([], device="cuda")
         backscatter = torch.tensor([], device="cuda")
@@ -92,10 +92,10 @@ class MediumTcnnModel(torch.nn.Module):
                          "degree": self.levels}
         self.network = {
             #"otype": "FullyFusedMLP",
-            "activation": "Softplus",
-            "output_activation": "None",
+            "activation": "Tanh",
+            "output_activation": "Sigmoid",
             "n_neurons": self.layer_width,
-            "n_hidden_layers": 1
+            "n_hidden_layers": 3
         }
         self.direction_encoding= tcnn.Encoding(
             n_input_dims=3,
@@ -125,11 +125,9 @@ class MediumTcnnModel(torch.nn.Module):
         return self.tcnn_encoding(direction)
     
     def get_output(self, camera):
-        output_shape = [3, camera.image_height, camera.image_width]
-        output = self.forward(camera).reshape([camera.image_height, camera.image_width, 6])
-        #output = output.permute([2,0,1])
-        colour = self.out_activation(output[..., :3] + self.colour_bias).view(*output_shape)#.to(torch.float64)
-        backscatter = self.activation(output[..., 3:6]).view(*output_shape)#.to(torch.float64)#output[3:, :, :]
+        output = self.forward(camera).reshape([camera.image_height, camera.image_width, 6]).permute([2,0,1])
+        colour = output[:3, ...]#self.out_activation(output[:3, ...])
+        backscatter = output[3:6, ...]#self.out_activation(output[3:6, ...])
         return {"medium_rgb": colour, "medium_bs": backscatter}
 
     def save(self, path):

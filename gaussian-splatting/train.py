@@ -58,9 +58,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
     ema_loss_for_log = 0.0
     progress_bar = tqdm(range(first_iter, opt.iterations), desc="Training progress")
     first_iter += 1
-    #print("Model establish time: %s" %(time.time() - model_time))
     for iteration in range(first_iter, opt.iterations + 1):
-        #render_time = time.time()   
         if network_gui.conn == None:
             network_gui.try_connect()
         while network_gui.conn != None:
@@ -98,20 +96,12 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         render_pkg = render(viewpoint_cam, gaussians, medium, pipe, bg)
         image, viewspace_point_tensor, visibility_filter, radii, depth = render_pkg["render"], render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"], render_pkg["depth"]
 
-        #if iteration % 1000 == 0:
-            #print("Render time: %s" % (time.time() - render_time))
-
-        #loss_time = time.time()
-
         # Loss
         gt_image = viewpoint_cam.original_image.cuda()
-        Ll1 = l1_loss(image, gt_image)
-        loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
+        Ll2 = l2_loss(image, gt_image)
+        loss = (1.0 - opt.lambda_dssim) * Ll2 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
         loss.backward()
-        #if iteration % 1000 == 0:
-            #print("Loss time: %s" % (time.time() - loss_time))
 
-        #etc_time = time.time()
         iter_end.record()
 
         with torch.no_grad():
@@ -125,13 +115,12 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
             # Log and save
             #training_report(tb_writer, iteration, Ll1, loss, depth_loss, l1_loss, iter_start.elapsed_time(iter_end), testing_iterations, scene, render, (pipe, background))
-            training_report(tb_writer, iteration, Ll1, loss, l1_loss, iter_start.elapsed_time(iter_end), testing_iterations, scene, render, (pipe, background))
+            training_report(tb_writer, iteration, Ll2, loss, l2_loss, iter_start.elapsed_time(iter_end), testing_iterations, scene, render, (pipe, background))
             if (iteration in saving_iterations):
                 print("\n[ITER {}] Saving Gaussians".format(iteration))
                 scene.save(iteration)
 
             # Densification
-            #densify_time = time.time()
             if iteration < opt.densify_until_iter:
                 # Keep track of max radii in image-space for pruning
                 gaussians.max_radii2D[visibility_filter] = torch.max(gaussians.max_radii2D[visibility_filter], radii[visibility_filter])
@@ -143,26 +132,18 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                 
                 if iteration % opt.opacity_reset_interval == 0 or (dataset.white_background and iteration == opt.densify_from_iter):
                     gaussians.reset_opacity()
-            #if iteration % 1000 == 0:
-                #print("Densify time: %s" % (time.time() - densify_time))
 
             # Optimizer step
-            #optimizer_time = time.time()
             if iteration < opt.iterations:
                 gaussians.optimizer.step()
                 gaussians.optimizer.zero_grad(set_to_none = True)
                 medium.optimizer.step()
                 medium.optimizer.zero_grad(set_to_none = True)
-            #if iteration % 1000 == 0:
-                #print("Optimizer time: %s" % (time.time() - optimizer_time))
 
             if (iteration in checkpoint_iterations):
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
-                #TODO fix chkpnt save args
                 torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt_gaussian_" + str(iteration) + ".pth")
                 torch.save(medium.state_dict(), scene.model_path + "/chkpnt_medium_" + str(iteration))
-        #if iteration % 1000 == 0:
-            #print("Etc time: %s" % (time.time() - etc_time))
 
 def prepare_output_and_logger(args):    
     if not args.model_path:
@@ -186,9 +167,9 @@ def prepare_output_and_logger(args):
         print("Tensorboard not available: not logging progress")
     return tb_writer
 
-def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_iterations, scene : Scene, renderFunc, renderArgs):
+def training_report(tb_writer, iteration, Ll2, loss, l2_loss, elapsed, testing_iterations, scene : Scene, renderFunc, renderArgs):
     if tb_writer:
-        tb_writer.add_scalar('train_loss_patches/l1_loss', Ll1.item(), iteration)
+        tb_writer.add_scalar('train_loss_patches/l2_loss', Ll2.item(), iteration)
         tb_writer.add_scalar('train_loss_patches/total_loss', loss.item(), iteration)
         tb_writer.add_scalar('iter_time', elapsed, iteration)
 
@@ -200,7 +181,7 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
 
         for config in validation_configs:
             if config['cameras'] and len(config['cameras']) > 0:
-                l1_test = 0.0
+                l2_test = 0.0
                 psnr_test = 0.0
                 for idx, viewpoint in enumerate(config['cameras']):
                     image = torch.clamp(renderFunc(viewpoint, scene.gaussians, scene.medium, *renderArgs)["render"], 0.0, 1.0)
@@ -209,13 +190,13 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
                         tb_writer.add_images(config['name'] + "_view_{}/render".format(viewpoint.image_name), image[None], global_step=iteration)
                         if iteration == testing_iterations[0]:
                             tb_writer.add_images(config['name'] + "_view_{}/ground_truth".format(viewpoint.image_name), gt_image[None], global_step=iteration)
-                    l1_test += l1_loss(image, gt_image).mean().double()
+                    l2_test += l2_loss(image, gt_image).mean().double()
                     psnr_test += psnr(image, gt_image).mean().double()
                 psnr_test /= len(config['cameras'])
-                l1_test /= len(config['cameras'])    
-                print("\n[ITER {}] Evaluating {}: L1 {} PSNR {}".format(iteration, config['name'], l1_test, psnr_test))
+                l2_test /= len(config['cameras'])    
+                print("\n[ITER {}] Evaluating {}: L2 {} PSNR {}".format(iteration, config['name'], l2_test, psnr_test))
                 if tb_writer:
-                    tb_writer.add_scalar(config['name'] + '/loss_viewpoint - l1_loss', l1_test, iteration)
+                    tb_writer.add_scalar(config['name'] + '/loss_viewpoint - l2_loss', l2_test, iteration)
 
 
         if tb_writer:

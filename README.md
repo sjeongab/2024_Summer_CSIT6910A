@@ -19,7 +19,6 @@
 * Add parameter for medium training and rendering
 * Load model in WebGL (Onnx)
 * Test MediumModel with different parameters
-* Add L2 loss
 * Store output as datetime
 
 ## Idea
@@ -174,3 +173,6 @@
   * Training speed enhancement
   * Rollback to 30_000 iteration and pcd_from_cloud
   * Change in parameters
+
+**[2024-08-01]**
+  * Medium model optimization
