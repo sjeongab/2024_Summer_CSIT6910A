@@ -704,7 +704,7 @@ void main () {
     vec4 watercolor = vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
 
     vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
-    vColor = color;
+    //vColor = color;
     vPosition = position;
 
     vec2 vCenter = vec2(pos2d) / pos2d.w;
@@ -739,9 +739,14 @@ let defaultViewMatrix = [
     0.03, 6.55, 1,
 ];
 let viewMatrix = defaultViewMatrix;
+
+
 async function main() {
+    const sess = new onnx.InferenceSession();
+    const loadingModelPromise = sess.loadModel("./medium_model.onnx");
     let carousel = true;
     const params = new URLSearchParams(location.search);
+    loadingModelPromise.then(() => { })
     try {
         viewMatrix = JSON.parse(decodeURIComponent(location.hash.slice(1)));
         carousel = false;
@@ -767,7 +772,6 @@ async function main() {
 
     const downsample =
         splatData.length / rowLength > 500000 ? 1 : 1 / devicePixelRatio;
-    console.log(splatData.length / rowLength, downsample);
 
     const worker = new Worker(
         URL.createObjectURL(
@@ -780,7 +784,6 @@ async function main() {
     const canvas = document.getElementById("canvas");
     const fps = document.getElementById("fps");
     const camid = document.getElementById("camid");
-
     let projectionMatrix;
 
     const gl = canvas.getContext("webgl2", {
@@ -806,7 +809,6 @@ async function main() {
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
     gl.useProgram(program);
-    console.log(gl.getAttribLocation(program, "position"));
     if (!gl.getProgramParameter(program, gl.LINK_STATUS))
         console.error(gl.getProgramInfoLog(program));
 
@@ -833,6 +835,7 @@ async function main() {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, triangleVertices, gl.STATIC_DRAW);
     const a_position = gl.getAttribLocation(program, "position");
+
     
     gl.enableVertexAttribArray(a_position);
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -886,7 +889,6 @@ async function main() {
             link.click();
         } else if (e.data.texdata) {
             const { texdata, texwidth, texheight } = e.data;
-            // console.log(texdata)
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texParameteri(
                 gl.TEXTURE_2D,
@@ -1034,9 +1036,6 @@ async function main() {
             inv = rotate4(inv, dx, 0, 1, 0);
             inv = rotate4(inv, -dy, 1, 0, 0);
             inv = translate4(inv, 0, 0, -d);
-            // let postAngle = Math.atan2(inv[0], inv[10])
-            // inv = rotate4(inv, postAngle - preAngle, 0, 0, 1)
-            // console.log(postAngle)
             viewMatrix = invert4(inv);
 
             startX = e.clientX;
@@ -1077,7 +1076,6 @@ async function main() {
                 startY = e.touches[0].clientY;
                 down = 1;
             } else if (e.touches.length === 2) {
-                // console.log('beep')
                 carousel = false;
                 startX = e.touches[0].clientX;
                 altX = e.touches[1].clientX;
@@ -1339,6 +1337,10 @@ async function main() {
 
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
+            //const array = new Array(new Array<float>(), new Array<float>(), new Array<float>());
+            const input = new onnx.Tensor(new Float32Array([0.5, 0.3, 0.2, 0.5]), "float32");
+            const outputMap = sess.run();
+            console.log(outputMap);
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
             gl.clear(gl.COLOR_BUFFER_BIT);
             //gl.clearColor(1/255, 50/255, 32/255,0.5);
@@ -1377,8 +1379,6 @@ async function main() {
                     canvas.height,
                 );
                 gl.uniformMatrix4fv(u_projection, false, projectionMatrix);
-
-                console.log("Loaded Cameras");
             };
             fr.readAsText(file);
         } else {
@@ -1429,6 +1429,7 @@ async function main() {
     let bytesRead = 0;
     let lastVertexCount = -1;
     let stopLoading = false;
+    
 
     while (true) {
         const { done, value } = await reader.read();
@@ -1450,6 +1451,8 @@ async function main() {
             buffer: splatData.buffer,
             vertexCount: Math.floor(bytesRead / rowLength),
         });
+   
+    
 }
 
 main().catch((err) => {

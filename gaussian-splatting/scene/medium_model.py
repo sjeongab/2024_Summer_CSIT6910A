@@ -16,8 +16,9 @@ class MediumModel(torch.nn.Module):
 
         self.linear_stack = torch.nn.Sequential(
             torch.nn.Linear(self.in_dim, self.layer_width),
-            torch.nn.SoftPlus(),
+            torch.nn.SELU(),
             torch.nn.Linear(self.layer_width, self.out_dim),
+            torch.nn.Sigmoid()
         )
         
         colour = torch.tensor([])
@@ -43,12 +44,12 @@ class MediumModel(torch.nn.Module):
         rays_o = camera.camera_center.repeat((rays_d.shape[0], rays_d.shape[1], 1))
         return torch.cat((rays_o, rays_d), dim=-1)
     
-    def forward(self, camera):
-        x = self.calculate_directions(camera)        
-        return self.linear_stack(x)
+    def forward(self, directions):      
+        return self.linear_stack(directions)
     
     def get_output(self, camera):
-        output = self.forward(camera).permute([2,0,1])
+        directions = self.calculate_directions(camera)
+        output = self.forward(directions).permute([2,0,1])
         colour = output[:3, :, :]
         backscatter = output[3:, :, :]
         return {"medium_rgb": colour, "medium_bs": backscatter}
@@ -58,12 +59,16 @@ class MediumModel(torch.nn.Module):
         torch.save(self.state_dict(), path)
 
     def load(self, path):
-        state_dict = torch.load(path)
-        new_state_dict = {}
-        for k, v in state_dict.items():
-            if "layers" not in k:
-                new_state_dict[k] = v
-        self.load_state_dict(new_state_dict)
+        self.load_state_dict(torch.load(path))
+
+    def export_to_onnx(self, path, camera=None):
+        self.load_state_dict(torch.load(path))
+        self.eval()
+        if camera is None:
+            direction = torch.zeros([1054,1600,6])
+        else:
+            direction = self.calculate_directions(camera)
+        torch.onnx.export(self, direction, "medium_model.onnx", verbose=True, input_names=["directions"], output_names=["output"])
 
 class MediumTcnnModel(torch.nn.Module):
     def __init__(self):
@@ -78,6 +83,7 @@ class MediumTcnnModel(torch.nn.Module):
 
         colour = torch.tensor([], device="cuda")
         backscatter = torch.tensor([], device="cuda")
+
         self._colour = torch.nn.Parameter(colour.requires_grad_(True))
         self._backscatter = torch.nn.Parameter(backscatter.requires_grad_(True))
 
@@ -118,14 +124,14 @@ class MediumTcnnModel(torch.nn.Module):
         rays_d = (torch.nn.functional.normalize(rays_d)+1)/2.0
         rays_d_flat = rays_d.view(-1,3)
         rays_d_encoded = self.direction_encoding(rays_d_flat)
-        return rays_d_encoded
+        return rays_d_encoded.type(torch.float)
     
-    def forward(self, camera):
-        direction = self.calculate_directions(camera)
-        return self.tcnn_encoding(direction)
+    def forward(self, direction):
+        return self.tcnn_encoding(direction).type(torch.float)
     
     def get_output(self, camera):
-        output = self.forward(camera).reshape([camera.image_height, camera.image_width, 6]).permute([2,0,1])
+        direction = self.calculate_directions(camera)
+        output = self.forward(direction).reshape([camera.image_height, camera.image_width, 6]).permute([2,0,1])
         colour = output[:3, ...]#self.out_activation(output[:3, ...])
         backscatter = output[3:6, ...]#self.out_activation(output[3:6, ...])
         return {"medium_rgb": colour, "medium_bs": backscatter}
@@ -136,3 +142,12 @@ class MediumTcnnModel(torch.nn.Module):
 
     def load(self, path):
         self.load_state_dict(torch.load(path))
+
+    def export_to_onnx(self, path, camera=None):
+        self.load_state_dict(torch.load(path))
+        self.eval()
+        if camera is None:
+            direction = torch.zeros(1054*1600*6)
+        else:
+            direction = self.calculate_directions(camera)
+        torch.onnx.export(self, direction, "medium_model.onnx", verbose=True, input_names=["directions"], output_names=["output"])

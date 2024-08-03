@@ -1,0 +1,209 @@
+pytorch2.1.2:©∑
+ª
+
+directions
+onnx::MatMul_15,/linear_stack/linear_stack.0/MatMul_output_0#/linear_stack/linear_stack.0/MatMul"MatMul2¿/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/linear.py(114): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/container.py(215): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(48): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(124): wrapper
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(133): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(1285): _get_trace_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(915): _trace_and_get_graph_from_model
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1011): _create_jit_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1135): _model_to_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1596): _export
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(516): export
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(71): export_to_onnx
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/__init__.py(95): save
+train.py(121): training
+train.py(233): <module>
+
+ÿ
+linear_stack.0.bias
+,/linear_stack/linear_stack.0/MatMul_output_0)/linear_stack/linear_stack.0/Add_output_0 /linear_stack/linear_stack.0/Add"Add2¿/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/linear.py(114): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/container.py(215): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(48): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(124): wrapper
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(133): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(1285): _get_trace_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(915): _trace_and_get_graph_from_model
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1011): _create_jit_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1135): _model_to_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1596): _export
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(516): export
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(71): export_to_onnx
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/__init__.py(95): save
+train.py(121): training
+train.py(233): <module>
+
+«
+)/linear_stack/linear_stack.0/Add_output_0*/linear_stack/linear_stack.1/Tanh_output_0!/linear_stack/linear_stack.1/Tanh"Tanh2ƒ/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/activation.py(356): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/container.py(215): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(48): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(124): wrapper
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(133): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(1285): _get_trace_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(915): _trace_and_get_graph_from_model
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1011): _create_jit_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1135): _model_to_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1596): _export
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(516): export
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(71): export_to_onnx
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/__init__.py(95): save
+train.py(121): training
+train.py(233): <module>
+
+€
+*/linear_stack/linear_stack.1/Tanh_output_0
+onnx::MatMul_16,/linear_stack/linear_stack.2/MatMul_output_0#/linear_stack/linear_stack.2/MatMul"MatMul2¿/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/linear.py(114): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/container.py(215): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(48): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(124): wrapper
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(133): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(1285): _get_trace_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(915): _trace_and_get_graph_from_model
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1011): _create_jit_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1135): _model_to_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1596): _export
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(516): export
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(71): export_to_onnx
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/__init__.py(95): save
+train.py(121): training
+train.py(233): <module>
+
+ÿ
+linear_stack.2.bias
+,/linear_stack/linear_stack.2/MatMul_output_0)/linear_stack/linear_stack.2/Add_output_0 /linear_stack/linear_stack.2/Add"Add2¿/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/linear.py(114): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/container.py(215): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(48): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(124): wrapper
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(133): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(1285): _get_trace_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(915): _trace_and_get_graph_from_model
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1011): _create_jit_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1135): _model_to_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1596): _export
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(516): export
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(71): export_to_onnx
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/__init__.py(95): save
+train.py(121): training
+train.py(233): <module>
+
+©
+)/linear_stack/linear_stack.2/Add_output_0output$/linear_stack/linear_stack.3/Sigmoid"Sigmoid2ƒ/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/activation.py(292): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/container.py(215): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(48): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1508): _slow_forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(124): wrapper
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(133): forward
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1527): _call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/nn/modules/module.py(1518): _wrapped_call_impl
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/jit/_trace.py(1285): _get_trace_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(915): _trace_and_get_graph_from_model
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1011): _create_jit_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1135): _model_to_graph
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(1596): _export
+/home/cheri/anaconda3/envs/CSIT6910A/lib/python3.8/site-packages/torch/onnx/utils.py(516): export
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/medium_model.py(71): export_to_onnx
+/home/cheri/2024_Summer_CSIT6910A/gaussian-splatting/scene/__init__.py(95): save
+train.py(121): training
+train.py(233): <module>
+
+main_graph*ùÄBlinear_stack.0.biasJÄ´^†æÌ^ÙΩf	>>∑æ,e>ÌúY>&£Å>CÖæ/–>?Õwæ≠–>ˆò»æº;∫æôaÄ>‘√.=5Ô¿<#gæ2\/æávÙΩ˚ûÀætÕ≠<”ﬁì=6µπÙˇ>ÒT∆>ΩMﬁ=	æ™,æÚªÖæÊêæßÜΩA‡ìΩ˘9>9∞2æN¢¶>⁄™íæ”ò:#Âª>xŸœ>é(ræ´Óî=‰ÖE=o DæŒnæÅu‚=XëæüÛâ="Ê4>SΩ$æãü≠>0‹ºC¨=>8ˇŒ>)ëˇΩu+c>õ%ÔΩ’BtΩç±çΩπ7&ª∑Ïæ¯√=…|<eÑ>∆:©ΩﬂØ'=YÇæØæm+)>(¯U=µk'æÒWæÚß⁄=˛-óΩqóà>ÉoΩ<RÈ>%$6>"&ÕΩ∫ﬂ4>¡>ö>Áô<û£=
+s<á∏ê>G0æÖ8^æH*6>qÍµæQy÷;yA@æXˆâ>‘õ¬æùy}>gÃŒ>—,©=”ﬁº|¿Õ>-ß2æÜˇΩÖ7æû‘fΩ(∑µ=ﬁV_=ΩÍùΩe˝–æ”>´<3"Fº‡é{=˛)†>&,À>ˇxæNâ–ºÄ'æ0•¿æ˚òæU.ƒ>øs>‘ç`>çSh>É¶æèú/=wä¬>ENiæÚπ>ﬁ¡€=èì>˙3æ∫@>*3Blinear_stack.2.biasJ≠ûËºŒ/=7`Ω69≠=¯˚Ä=˚üá<*õÄBonnx::MatMul_15JÄAOHªtÜº†∞«æì¥çæ£√ÜΩTÙ"æ–tæ=tç=≈f9æ¨%å>ò'=>Ìb<‹K$>‘=@~ú=å@>ûºP>XG6æF∏ºX>è>ù$>ÜL—Ω‚+àæ•5©=≈ªæ_ù√æábÇ> ëªæ"ºæù¢ºæo3=!…ΩΩpìæâyæOæræ!*Gªº£æà>ËBæ_π>	
+>£ó>[ÿ¨>ø≈Hæí¢>ÒÀEæóI∑>;ı®æ»1øΩ˝	ºΩß±IæL5ã=–0>ô‹,>æê>7≠æˆÿù>Cû´>¡Éæ Çî=alçæÔsß>Îûæl†ï>,L
+> %@=ﬂôî>Ÿ_Eæ¡_æ0”ìæ
+≥<…úïΩj±>ê∞O>÷≈æUY≠>≈Ω≥<_¥=L¢æÎí>`éìæÕ[Å>¬:O>áÚ∏>∑Ò∞>éΩ‹>LæjÜ>í∫%pûæ·lZæÛPçæﬂ˜Õ>`“Ñ>Dáæ⁄F±>˚Mæ±òΩæu=¶>ÆÃ8>+T∞æ[>ÑAÆ>KŸ±>LÓΩÏDÉ>ÑL&æ“o>ñG¶æàØæAù—ΩS«eΩN€íΩ2$è>Qâ:>ÃÌ'>mªí>ı∫æVuGæ\"Ã>wÖ©>˚2ƒ>lΩΩ—Ù=≤¬D>é®æ5˚4ætºæB`>tª•>™näæ*6æ’0=ùò¥>≠≥>Ó)√æÅXqºâ%væ%(>∫¡=ù/≠>ƒÇæ!ŸåΩÕhS>Ã˛Æ=àn“Ω {=D∞æT»<Ã¢KæÖ°´º∏ÁÑ>¨/Fæ–j∞æê£æ~z¥æ ≥·ºñ?Ñ>6ØΩ∑’ØΩñ(ï<¸ÌºbMí>≤G•Ωv[æÍ`=<'°wΩ∏%Ñæ•–ú>éÿ¨æ˚gÙΩT}ãæQúæúÉDæÒΩáæ—õ¶>\∫îºŸÄæ,3ñ=‡2>âæ=áZº>Pæ≥æPÒ–>ΩCj>ÚﬂÔ=ä›1>å5Œæ ™∫æ#˜Kæxd°>öÙ–>c¨«Ω›P>Ω-¿>±k>éπæ*ÅæõUõæZ€<ƒΩæ¬º≠>"a>í>F>Ò§æg˘ æôÕæOæ£Rg>ÉpíæG(ø>aNaæ;Å>Å—=Gjóæ£äJæ0ªuCπ=8Kõ<1?Ñæ Ÿü<é≈>—q>~◊¡æ7Ü—='H¢>Ω:6>ΩæêbAæ∆h8æ…`=8aéæõ7Ÿ=-`√æ]ÀÏ<Ì…ΩLÅ<æ%QµΩ%K¢>á{>d9‚ΩuÁé>äÄæ ˚öæëmæ=cËÖ>fÖ–Ωô‹öæsßæC=|ûîæ6û≥>£ﬂ09è«ù>;Ûº>	¨æeΩT,æp◊>ˆCΩ>|áæ8ä:>wóæÿÆÖ>Õõ=y°wæM¨Å>∫‰µ>ÀÃ¬æûñâΩ;¢ï><£æs«æﬁ3+æ–Ω˙Kæ?æ°ï>ˇ≈>/Sé>ó©Ω1¬∞Ω“‘ÇΩ™—∑>˛ı@ΩDï>à@¨æ¯Xìæ˛∞å<„EæéÕQ=‡»®>;$µæ§Sí;÷~;>cìæ	`∏;1xæI÷pæˇ§ÈΩ˘ü≈æ˘:>ΩÚ%à=—õ~æÇåê>5(Yæ≈y%>∂Æ>Æ=µu>Ü–>Õƒ∂>Kí{æ$çæJæs€ßæ÷§éæzÔ…æM‹π>:”X>$®kæ„ÍqæƒÙ*>Äámæ	Ù‚ΩÀi´<”_2æ¥OãæªÓ»æb:'æ°ƒœ>–ôßæB><Å7>ÂÜ≤æà+¨æxW<±mØ>'ù¡æF>M˙ÁΩ”Er>¿“uæl™–>é’Ω≥∫øΩw)æhL†=
+ÇÀæÍ8∫Ω∆°˝Ωz^+><˝ºÉLzΩÈŸ¥æ0¬èæ§ÂMæàI>piAæ¸B∑>&0> wùæ%Öáæugc>õ'á=≤ô>}Ω æ“$>ô<∑>ÜÑΩ¿ÜÜ>¡1¿=™ÇÑæêlTΩß<¡ÙÖΩ„ }>-íæÑ‹•æ
+£ä>æFù>ﬁÛ-æ]b>
+‘ôæó=›=[∆w<ˇë≠>íÁ¡æ¿p@æïùJ>ÉWæ¸Àœ>ä¢æÈñ¸=È≥»>◊n∏>*∑π>]?æÈO>∏pæ›rª-x>!Ëñ<ù–E>‰Q´æ´Ê+ΩÀΩÑ>Ep-ªSBe>ûÅ)æ  ≠;âÑ*ædû:ædÈ=Ñb>ª fæªΩÜ>O∞>”ÍæΩÕ°©æDO>cg¨>Ù¡ìæÔR+:V&éΩúæµ[p>º˜=Ÿ¢¥=˝àÔ=%i≠>6b>öõæ»£¿=~RΩõ3ã>OÃP=`=áØÑ>Ò°>WÍª>TR£>–”K>{•>áΩXmæ§÷ΩZÅ>úíjæé°>œ≠ûæÉΩkN°Ω•rH>ãû>ô«æ|Àæ”‡Ù=ª3S>}{Ω˚h`>ˇ-Œ>OC>O'Z>.@æ—5Ωulì>+>äÿæ`&ΩB2Tæã%Ã>∞–àæÂëJæ†Õ>‹QΩAÃvæc!ñΩ[ÆäæazÀ>®SæKO∏æè¡>≈>ΩDΩŒµ>\º≈>≈äΩM=¨.5>Â«>=Œ*æìu¿>o˝°ævA®>”}†>é+ãæÔ+≠æ1˙≈>çˇr=Ã—4Ω≤äFæÃ¨‚=´_wæ:æXæ’Ì±>zºÀ<qJ[æÒ∞>—2ëæºqíæ)!æó≠¸Ω∂D%>h¨ΩáñÉæ2íæ∫‚Ø<q·É>EÍ%>¸ﬁêæÊ~e>°æe¶=ÀÓû>$√ >®‡Œæl£ƒ> hùæ√e~æ?˘s=UÅ»æ|Ÿ±ΩÂ9<s∆>”…OæSb>P°ΩnË=æ†øº>c%ß>õﬂH>µı•>ôsæ9ûæ/+>Ò˝;ªÄ%º‚îæÓ¿P=≥-1æV8W>u,\æE,œæ‰b]>”´>™ôjæëU<f%æ,>VB+>L1§=∆Z´æïHZæ¥R§æ…;C>›{êæîÆøΩé˚I>mrñΩ ˇëæç-b>øáæ¥Í´>Ù7>Pæ‹÷†æ´Ö>n»>W{±>v =&^O>oîæóí∂=Œú©ΩVÉò<=¯âæ1<ÕæoÛh=Ñcp>™…læ0c*ΩÀµΩg&Øæ˙ÅQ>O˜ΩI|“=äs˛=3¿>x§ùæ	ÒæÂªe=?P∆æı ∞ΩÉæ!»£>“‘¯ºÇÓΩ> ©=Õ‡ºæB∆>I†3æ…∫ Ωﬁ”R>„≈=†áææ €>‚áwæ˚sæ¢ñØ>_ìGæΩõ1=≈1 æ”!yΩgÚ4ΩÄ#O>	=2©Cæ\W=l∂æké>˙ŸnæmŸ¢Ω¿)XΩˇ∏•> N7Ω=∏¿Ä=¡¥ΩQ4‡=ÀX§ΩX÷z>jú>i´”ΩN√√æOSVæu>wÊa=±ÙWæSΩâ3æM√µæ•Å–æ;úwæ∏óáæÒ◊å>=;°æM©Ω>µL∆=`«wæ]∏≤=AΩ—ﬁÒºH-†æ≠ñ…æ")§ΩJz>§e>È®æ£>—è>Ä›>7èæ¸ΩS=Û[U=∆Œ>8VÌΩt8ª>ÓÈı=% æ≤]=¥<>	n†>∏S„='\∫æŸ•åæçFˆ=™˙	ºÕëæé2õæ„ÄΩ(ÌÉ;j=˙^Kæπé#>πµæQ‰c>*¿">Ô’º=⁄ƒ>%ë>…#´>û9∫>óH>’Rå>∫ô¯<∫û>º/ä<èO¡>«øæ'f>îWüæ’çå>ÎzºæÉrÆ>n”"æô⁄ãæ¥M<Ω…I>L›†><^=Ì/bæsw>áÊ>BG>ñß…Ω≠˙‡Ω‚r©æ¥ˆù=˘ﬁ´>„a»æJΩ∫Ω$^R>ˇR>“˛¨>z≠æª¡>®)√>¸∑º>e‹>æ”¢æløl=õÀæ=“º2∑ÀΩ
+Áo=ÒÎ´>3◊èæQÅ>9ëƒ>_ qΩüÑº°≥º˙=‹<√æ’è>{≤>V»øæVe≤>πS∆=üÍ•>¶‡òæ–ôÏΩÜçæWÂΩ=!íz>"Xµ>*õÄBonnx::MatMul_16JÄØx†Ω»Ó ª©(òΩ€8áΩLÑ =ß¬ºÁ∑ª˜¯™Ω˙∫™:∫'º°eGΩµQÈ<PÑÒ<ˇæPΩ"§é=XwS<^ñ<Æ$ =ì%Ÿ<é—=/õΩºSº<IN•º0Nª{zó=Âñıº©}!Ω,:=õã}=§{¨=C·±=Ω„y=r¸û=¡ΩZLû=/îzΩØ§=^è=⁄rºêU⁄º78ù=|œ
+=Ás=µ©R<Ø¸=cwó=…IÇ;*
+£= â~=`ÂªÈ#ÆΩΩT¬º‡}U=˛Œ{º‰⁄:ºÅ◊Âº`µ„ºÆ|{Ω›¥ΩÄ∂è=¿zåΩNtíªŸ⁄7Ωzu=´^TΩ∑˘æ:	fΩÃÉ<Búò=(u=–hÅ</éáΩéì"ºïEäΩ∞B=ı„ºì8:œûFΩ§CΩ%≠º›ÑΩÒ¡êºéΩ§¡=I9=ríñΩK{i<íÖΩ> Ω˛´Ωæ+˛<˜3^='Ö∫	+óΩw)Ω&Æ<ú©i<2èfΩ2¿Ω¸$=€X≥ΩS+≤=úËÆ<}^•=w¿NΩ©Ωì
+<tÙı<Pü=:ß∫º›Fº“ê=≤Ãv=Qàºß›=+gOΩ*Øé=œÒêΩ1=ô¸¥<4æûΩOÒ-=û√ÅΩ⁄+Hº9,ΩñPΩfÉΩª„W<´ÚÄΩ[%˙:H9¶Ω òΩÑë=#≤z=Gdﬂºò:=–
+íΩyàΩxZE<„#=fä…:'Åí=ùÂ÷:œ‰óΩ0ê0=bÆΩ<≈<ô,u=y=Dòî<°…¥Ωi¸d=J”-;4^=†ùΩ¡	ç<§ßΩíZàº—MÆºk,&Ωd EΩ◊⁄Ω˝^=∏ Ω∞Ö[ΩHFÅΩ¬!AΩm±Ωîìg= Íe=PÏÅº5Ò°Ω“∫˙ª:D=+≈£Ω‹Ñ=hΩΩ°´è;ÊÁ´ΩílMΩØl	={üΩ0@í=,ëØ=QΩüΩ!ƒqºYçΩnÚºπ4∞Ωvàâºò1≤=»óΩ\â=~ßî=˚ÌfΩV‹sª}©,ΩA?LΩc5„<y6=äFìΩ∞ãÉΩ‰òÇº,=S˝≤=‘Äò=~TÑº|Lﬁ<ó∫¡º©®ΩŒ{≤ΩÓ#¯ºEç=»Üe=œüΩÂrNΩTCÆΩD∑GΩ©´û=Gx≤ΩªLº6∑á=l∆t=©õ=\ñùΩbÎ~ΩÙ¶›<À´9Ωë∂†=Á=ÿ˘zªÜ=0Ω™ΩW–]=Ä∆≠=#ÅT=ìo´<a·vªJMÀº±±p=Í8ΩÚï=◊í¥ª&¨›ππ¡=ßwòΩ˘shΩFî=OoÅ<§4¥ΩÇ|mΩ6É=æ)ºI≠ ª".\º∫åÉ=%3<¨Ë™Ωµq™ΩL@sΩf}Ωı8í=â€=ï¬°<È=Áo=^&©Ω◊v=ù@“ªﬁ%mΩåÑÖ=ÛK¯ºün=*…Ìº=ÌÇ<‘ÃΩ⁄—≠<gu;==,º'0==äΩ'6Ä<nºgp≤º‡tΩ‡ô©Ωo≠#=¨XΩFÄ3=àÊ=5Â∫ºâ ≥ºıM=ö!eºıÕeΩA–¢=ÿvEΩDìº'•5ºì´Ω∑±=cR®=´u÷º)µˇºı≠ïΩ§≠™Ω‘˛≥ΩGΩ§ΩΩcõΩh=~Œ=å==h≠Ω@{oΩÙvá=<˜$Ω…>l=@>Ω∆´º‰∞Ωı’=¬ÿ'º1K}º¥B\ΩY›ì=XﬂfΩxï6Ωm—ºx§*=¢⁄Ωeˇ<%∞≠=#˜ºˇ˝©Ωd1=Á˛ìΩ
+=sÃˇªìl"=0&oº¡ÕΩ˜¥êΩ<∞ÑΩ™'pΩúΩ€hôΩ…ªI¢X=≈=w!ΩCÔæ<3S=ê1¥=ÿ 8=a“!º3˙GΩY^«<
+A=«⁄97Ê@<=;µ=°ÊcΩ’ì©=®êΩaƒEΩÁØ=Ú‰ùΩÈaµ<Æ%Ûº9”ª∑Ê<˝^=r»®ΩR5±;ùHì;ë4=Ç;F_ˆªq≤Ωpû=
+◊ç< [Ïºû^ÅΩ i≤ªÀ›=*˛Ωe≤¥=¸ó=Ωg–õ<AcΩ˛3=2#∫ºΩÏ•=´ï=x”§=<ÛΩ ⁄`Ωd˜õ=ã^;Ω–Ö?=@≤Ω:Dk=@é≥<!“ìΩ£öΩ˝vº¥Ω-Ω.†Ö=ˇ@—;é&£Ω'¯ì;uã9<%◊`=8kR<úiÆ=ﬂW.Ω))º≈Oà=UèΩë3ôºòS"ΩŸ2ò=®<¸K\Ω£®ºr¸’;>ä≠=].Û<Ë›M;teü<.èˆ:CHº5††=6®Æ=[ΩÇ~=}¶ΩBI6=”h®=‡,Ü=#'Ü<∞>ﬂ<C[g∫‘uΩ˙/
+ºeıß:)Å;∏≤ú<ƒ˜º9ó7=ë¡£=ˆa`ΩØAª;ëõ¥=—º≥L=LøΩ˜√∞=Û˜	Ω∫€k=øêºùY[Ω˝⁄˜º`5ë=eÜπ<ŒûKΩ'∂é=U–ì=QÔ=˙Ω=maíΩÃX˙;óÖ=`À±=ñıò<ºƒEΩáqÿ<üÙ8=‘_uΩ›πΩEïG=qöé=µ/D=Ü§ü=9-(=\œ º≥¨=Œ<¿_º"¥Ω	˝çΩâl4=€°bΩjdo=®ùåΩæD=
+öΩr–çΩ¡$@=X=u®π9“º^V›<Ã+=)@Ú<›>@=Èê9B±ΩC™:AÓ®< ?=◊ûΩpúΩÚπ†<≤‰(Ω(4d=2´+=^æHΩªÄΩKEΩòÆΩ<ùΩÉmΩˆ#Y=ânß=û8M<Ç(Ω[cñΩŸèΩÓŸñº°^á=pkΩk◊Ò<#ö"=ó‚ê=∞{ùΩó§H=È8àΩ@çßΩi=ÖrNΩmû§=1Œz=<¡ıª¢⁄ØΩó|®Ωvg=jâ˙∫_=w<Ûº'ª7<Ò‰IΩhr¨Ωí=T¿K=`æS=6hÇΩ˘†•Ω¿àzº›|çΩ;…o=ﬂ∂˘;dñûΩ∏ØÅΩ›îu:ùK˘<g&©º”Kç=}Ω
+Z#Ωûêz<_^Ω¶8º∫±á<u'iºÎÃï=OÍ;˜YΩ@Å=’’ËºC~§Ω’ êºL)‰<Ióº∂Ç∏ê8u=FæqΩıÔO=Ç>!º‘Ω‹íkΩ›Dû;†ÁΩ;È´=iT±<˝aF=∏\åΩ>Áá<4≤™Ω!˛$=G"≥=ıíâº¥zJ=0·ËºhãKºÊ¢ΩBjΩá@â=Òï=ÊN¶9ÙƒiΩ£/6=!ûªÂ8•<Ûîå={8ãºç˙zΩ
+=—2
+Ω√_º  q<â<ˆª‹J=FMå=Ï‘û=QΩÉËy=Y,çΩ&TãΩLê≤Ω≥ıö=(¡•Ω+3¶ΩÓ~∫¬.âΩŸ®^=ÿıª¡:”ºÔjÇΩ
+AñΩ∆vN=¸+î=#˝˙º/°ßΩ¨.ÆΩw≈õº…`á<¸i®Ω±_Ωy&ÜºDÿë=q—Q=L€§=€É<»ÜÅ=JZΩ:®Q∫cæ{ΩËä¡ºàö=Ls«ª6¶∫ªæ¥&ΩftΩ¡ﬁ.Ω&®ÉΩY|™=Í÷1Ω)ı<|Õ∞ºáºoïÌ<ˆtN=#G{=‚ÖΩá~∆º£tÍ9˙=rrû=î‰K=ˇ0hΩá'u<©ä=∆Ω<&,è=fe≤ºA£=ìjp<JO¥ΩØ˚≥=ùDkΩ)Ω„ìÑ<´ñ7=&8Œª7î=d”<2úc=ú°ÅΩ¬fyΩ
+& =pNõ=`Ω¡}ù=vnΩ_eÃªY^GΩ Ç4ºqß5=èø•Ωºø)=-|J=t˜7ΩΩ“ó=
+4ºéqúºï§â=öìú=-ˆ.=∏±®Ωµª˙;Sdº≤«Î;ÕE”ª6s≠Ωﬂ]CΩûczΩ~Ω∫ÿ5Ωû{QΩì´<“›öº»°Ω±âö=∑—.=(%–<â$åΩì◊ºU=±ËUºÍê|<=,N=£Ù3=‰4ß=◊C®<zô=ãzûΩ/bΩc«öΩ’¬*=‡î˚;oÂ9	ûjΩ≤RΩEï^=–i=Âu=Kºÿ{û<< =€[´ΩCv=ó-ΩÅ-SΩ0`=Z"
+
+directions
+
+¢
+¿
+b
+output
+
+¢
+¿
+B

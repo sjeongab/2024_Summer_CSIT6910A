@@ -38,8 +38,8 @@ def render_set(model_path, name, iteration, views, gaussians, medium, pipeline, 
 def render_sets(dataset : ModelParams, iteration : int, pipeline : PipelineParams, skip_train : bool, skip_test : bool):
     with torch.no_grad():
         gaussians = GaussianModel(dataset.sh_degree)
-        #medium = MediumModel().to("cuda")
-        medium = MediumTcnnModel().to("cuda")
+        medium = MediumModel().to("cuda")
+        #medium = MediumTcnnModel().to("cuda")
         medium.eval()
         
         scene = Scene(dataset, gaussians, medium, load_iteration=iteration, shuffle=False)

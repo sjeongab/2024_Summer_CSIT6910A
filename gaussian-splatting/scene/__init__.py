@@ -22,11 +22,11 @@ from utils.camera_utils import cameraList_from_camInfos, camera_to_JSON
 class Scene:
 
     gaussians : GaussianModel
-    #medium : MediumModel
+    medium : MediumModel
     medium: MediumTcnnModel
 
-    #def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
-    def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumTcnnModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
+    def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
+    #def __init__(self, args : ModelParams, gaussians : GaussianModel, medium: MediumTcnnModel, load_iteration=None, shuffle=True, resolution_scales=[1.0]):
         """
         :param path: Path to colmap scene main folder.
         """
@@ -83,15 +83,16 @@ class Scene:
                                                            "point_cloud",
                                                            "iteration_" + str(self.loaded_iter),
                                                            "point_cloud.ply"))
-            self.medium.load(os.path.join(self.model_path, "medium_model/model_{}".format(self.loaded_iter)))
+            self.medium.load(os.path.join(self.model_path, "medium_model/model_{}.pth".format(self.loaded_iter)))
         else:
             self.gaussians.create_from_pcd(scene_info.point_cloud, self.cameras_extent)
             #self.gaussians.create_from_scratch(scene_info.point_cloud, self.cameras_extent)
 
-    def save(self, iteration):
+    def save(self, iteration, viewpoint_cam):
         point_cloud_path = os.path.join(self.model_path, "point_cloud/iteration_{}".format(iteration))
         self.gaussians.save_ply(os.path.join(point_cloud_path, "point_cloud.ply"))
-        self.medium.save(os.path.join(self.model_path, "medium_model/model_{}".format(iteration)))
+        self.medium.save(os.path.join(self.model_path, "medium_model/model_{}.pth".format(iteration)))
+        self.medium.export_to_onnx(os.path.join(self.model_path, "medium_model/model_{}.pth".format(iteration)), viewpoint_cam)
 
     def getTrainCameras(self, scale=1.0):
         return self.train_cameras[scale]
