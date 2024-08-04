@@ -2,8 +2,8 @@ let cameras = [
     {
         id: 0,
         img_name: "00001",
-        width: 1959,
-        height: 1090,
+        width: 1600,
+        height: 1058,
         position: [
             -3.0089893469241797, -0.11086489695181866, -3.7527640949141428,
         ],
@@ -184,6 +184,7 @@ function getViewMatrix(camera) {
     ].flat();
     return camToWorld;
 }
+
 // function translate4(a, x, y, z) {
 //     return [
 //         ...a.slice(0, 12),
@@ -675,7 +676,7 @@ void main () {
     float clip = 1.2 * pos2d.w;
     if (pos2d.z < -clip || pos2d.x < -clip || pos2d.x > clip || pos2d.y < -clip || pos2d.y > clip) {
         gl_Position = vec4(0.0, 0.0, 2.0, 1.0);
-        return;
+        //return;
     }
 
     uvec4 cov = texelFetch(u_texture, ivec2(((uint(index) & 0x3ffu) << 1) | 1u, uint(index) >> 10), 0);
@@ -727,9 +728,9 @@ out vec4 fragColor;
 
 void main () {
     float A = -dot(vPosition, vPosition);
-    if (A < -4.0) discard;
+    //if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
-    fragColor = vec4(B * vColor.rgb, B);
+    fragColor = vec4(B * vColor.rgb, B) + vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
 }
 
 `.trim();
@@ -740,13 +741,13 @@ let defaultViewMatrix = [
 ];
 let viewMatrix = defaultViewMatrix;
 
-
 async function main() {
-    const sess = new onnx.InferenceSession();
-    const loadingModelPromise = sess.loadModel("./medium_model.onnx");
+    const session = await ort.InferenceSession.create('./medium_model.onnx');
+    //const sess = new onnx.InferenceSession();
+    //const loadingModelPromise = sess.loadModel("./medium_model.onnx");
     let carousel = true;
     const params = new URLSearchParams(location.search);
-    loadingModelPromise.then(() => { })
+    //loadingModelPromise.then(() => { })
     try {
         viewMatrix = JSON.parse(decodeURIComponent(location.hash.slice(1)));
         carousel = false;
@@ -1180,8 +1181,21 @@ async function main() {
     });
 
     let leftGamepadTrigger, rightGamepadTrigger;
+    let camToWorldMatrix = mat3.fromValues(viewMatrix[0], viewMatrix[1], viewMatrix[2], viewMatrix[4], viewMatrix[5], viewMatrix[6], viewMatrix[8], viewMatrix[9], viewMatrix[10]);
+    //const input = new onnx.Tensor(new Float32Array([camera.fx, camera.fy, camera.width, camera.height, camera.position, camToWorldMatrix]), "float32");
+    const pos = new ort.Tensor('float32', camera.position, [3]);
+    const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
+    //console.log(session.get_inputs()[0]);
+    const feeds = {pos: pos, viewMatrix: matrix}
+    const results = await session.run(feeds);
+    const medium_colour = results["medium_rgb"]["cpuData"];
+    const backscatter = results["backscatter"]["cpuData"];
+    console.log(medium_colour);
+    //const outputMap = await sess.run([input]);
 
     const frame = (now) => {
+        //const array = new Array(new Array<float>(), new Array<float>(), new Array<float>());
+        
         let inv = invert4(viewMatrix);
         let shiftKey = activeKeys.includes("Shift") || activeKeys.includes("ShiftLeft") || activeKeys.includes("ShiftRight")
 
@@ -1337,10 +1351,6 @@ async function main() {
 
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
-            //const array = new Array(new Array<float>(), new Array<float>(), new Array<float>());
-            const input = new onnx.Tensor(new Float32Array([0.5, 0.3, 0.2, 0.5]), "float32");
-            const outputMap = sess.run();
-            console.log(outputMap);
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
             gl.clear(gl.COLOR_BUFFER_BIT);
             //gl.clearColor(1/255, 50/255, 32/255,0.5);
