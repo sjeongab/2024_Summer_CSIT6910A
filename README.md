@@ -20,6 +20,9 @@
 * Load model in WebGL (Onnx)
 * Test MediumModel with different parameters
 * Store output as datetime
+* Re-run model with Softplus final activation
+* Load Onnx model as texture and apply to vertex shader Reference: https://webgl2fundamentals.org/webgl/lessons/webgl-skybox.html
+
 
 ## Idea
 * Group watercolour by splatting group(at rasterization) to increase rendering speed?
@@ -176,3 +179,12 @@
 
 **[2024-08-01]**
   * Medium model optimization
+
+**[2024-08-02]**
+  * Convert medium model to Onnx model
+
+**[2024-08-03]**
+  * Load Onnx model in WebGL
+
+**[2024-08-03]**
+  * Load Onnx model in WebGL
