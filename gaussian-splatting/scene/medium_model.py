@@ -18,7 +18,6 @@ class MediumModel(torch.nn.Module):
             torch.nn.Linear(self.in_dim, self.layer_width),
             torch.nn.SELU(),
             torch.nn.Linear(self.layer_width, self.out_dim),
-            torch.nn.Sigmoid()
         )
         
         colour = torch.tensor([])
@@ -56,8 +55,8 @@ class MediumModel(torch.nn.Module):
         rays_o = pos.repeat((rays_d.shape[0], rays_d.shape[1], 1))
         directions = torch.cat((rays_o, rays_d), dim=-1)
         result = self.linear_stack(directions).permute([2,0,1])
-        medium_rgb = result[:3, :, :]
-        backscatter = result[3:,:,:]
+        medium_rgb = torch.nn.Sigmoid(result[:3, :, :])
+        backscatter = torch.nn.Softplus(result[3:,:,:])
         return medium_rgb, backscatter
     
     def get_output(self, camera):

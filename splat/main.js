@@ -704,8 +704,8 @@ void main () {
     vec4 color = clamp(pos2d.z/pos2d.w+1.0, 0.0, 1.0) * vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
     vec4 watercolor = vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
 
-    vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
-    //vColor = color;
+    //vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
+    vColor = color;
     vPosition = position;
 
     vec2 vCenter = vec2(pos2d) / pos2d.w;
@@ -730,7 +730,7 @@ void main () {
     float A = -dot(vPosition, vPosition);
     //if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
-    fragColor = vec4(B * vColor.rgb, B) + vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
+    fragColor = vec4(B * vColor.rgb, B);
 }
 
 `.trim();
