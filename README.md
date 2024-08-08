@@ -23,6 +23,17 @@
 * Re-run model with Softplus final activation
 * Load Onnx model as texture and apply to vertex shader Reference: https://webgl2fundamentals.org/webgl/lessons/webgl-skybox.html
 
+### Report TODO
+* Nerfstudio image and load in WebGL
+* ONNX load
+* Medium Image, Ocean Floor image
+* 3DGS by opacity
+* Medium model flow
+* Result(Rendering speed, WebGL Rendering speed, PSNR, loss, quality)
+* Further improvements
+* Conclusion
+* Meeting Notes
+
 
 ## Idea
 * Group watercolour by splatting group(at rasterization) to increase rendering speed?

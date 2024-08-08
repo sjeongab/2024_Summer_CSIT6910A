@@ -449,7 +449,6 @@ function createWorker(self) {
             if (depth > maxDepth) maxDepth = depth;
             if (depth < minDepth) minDepth = depth;
         }
-
         // This is a 16 bit single-pass counting sort
         let depthInv = (256 * 256) / (maxDepth - minDepth);
         let counts0 = new Uint32Array(256 * 256);
@@ -676,7 +675,7 @@ void main () {
     float clip = 1.2 * pos2d.w;
     if (pos2d.z < -clip || pos2d.x < -clip || pos2d.x > clip || pos2d.y < -clip || pos2d.y > clip) {
         gl_Position = vec4(0.0, 0.0, 2.0, 1.0);
-        //return;
+        return;
     }
 
     uvec4 cov = texelFetch(u_texture, ivec2(((uint(index) & 0x3ffu) << 1) | 1u, uint(index) >> 10), 0);
@@ -728,9 +727,10 @@ out vec4 fragColor;
 
 void main () {
     float A = -dot(vPosition, vPosition);
-    //if (A < -4.0) discard;
+    if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
     fragColor = vec4(B * vColor.rgb, B);
+    //fragColor = mix(vec4(B * vColor.rgb, B), vec4(0.03,0.1,0.3,1.0), 0.5);
 }
 
 `.trim();
@@ -740,6 +740,8 @@ let defaultViewMatrix = [
     0.03, 6.55, 1,
 ];
 let viewMatrix = defaultViewMatrix;
+
+
 
 async function main() {
     const session = await ort.InferenceSession.create('./medium_model.onnx');
@@ -789,10 +791,10 @@ async function main() {
 
     const gl = canvas.getContext("webgl2", {
         antialias: false,
-        preserveDrawingBuffer: true,
-        premultipliedAlpha: true
+        //preserveDrawingBuffer: true,
+        premultipliedAlpha: false,
     });
-
+    
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertexShaderSource);
     gl.compileShader(vertexShader);
@@ -1190,6 +1192,26 @@ async function main() {
     const results = await session.run(feeds);
     const medium_colour = results["medium_rgb"]["cpuData"];
     const backscatter = results["backscatter"]["cpuData"];
+    
+    /*kdTreeData.fillDataArra
+    texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE3);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32I, 1058, 1600, 0, gl.RED_INTEGER, gl.INT, this.kdTreeData);*/
+    /*function initBkgnd() {
+        backTex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, medium_colour);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.Img);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }*/
+    console.log(typeof(medium_colour));
     console.log(medium_colour);
     //const outputMap = await sess.run([input]);
 
@@ -1352,7 +1374,18 @@ async function main() {
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            //gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.clearColor(0.0,0.0,0.0,0.0);
+            /*kdTreeData = new Int32Array(1058*1600);
+            kdTreeData.fill(100,1000);
+            texture = gl.createTexture();
+            //gl.activeTexture(gl.TEXTURE3);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32I, 1058, 1600, 0, gl.RED_INTEGER, gl.INT, kdTreeData);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.bindTexture(gl.TEXTURE_2D, null);*/
             //gl.clearColor(1/255, 50/255, 32/255,0.5);
             gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
         } else {

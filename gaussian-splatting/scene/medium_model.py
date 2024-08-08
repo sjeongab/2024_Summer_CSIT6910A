@@ -52,7 +52,7 @@ class MediumModel(torch.nn.Module):
         dirs = torch.tensor(np.stack([(i-W*.5)/focal_length_x, -(j-H*.5)/focal_length_y, -np.ones_like(i)], -1), device="cuda")
         rays_d = torch.sum(dirs[..., np.newaxis, :] * viewMatrix, -1)
         rays_d = torch.nn.functional.normalize(rays_d)
-        rays_o = pos.repeat((rays_d.shape[0], rays_d.shape[1], 1))
+        rays_o = torch.nn.functional.normalize(pos.repeat((rays_d.shape[0], rays_d.shape[1], 1)))
         directions = torch.cat((rays_o, rays_d), dim=-1)
         result = self.linear_stack(directions).permute([2,0,1])
         medium_rgb = self.out_activation(result[:3, :, :])
@@ -74,6 +74,7 @@ class MediumModel(torch.nn.Module):
     def export_to_onnx(self, path, camera):
         self.load_state_dict(torch.load(path))
         self.eval()
+        self.to(torch.device("cuda"))
         input = (torch.tensor(camera.FoVx, device="cuda"), torch.tensor(camera.FoVy, device="cuda"), torch.tensor(camera.image_width, device="cuda"), torch.tensor(camera.image_height, device="cuda"), camera.camera_center, camera.world_view_transform[:3, :3]) 
         torch.onnx.export(self, input, "medium_model.onnx", verbose=True, input_names=["fx", "fy", "W", "H", "pos", "viewMatrix"], output_names=["medium_rgb", "backscatter"])
 
