@@ -730,6 +730,7 @@ void main () {
     if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
     fragColor = vec4(B * vColor.rgb, B);
+    //fragColor = vec4(vColor.a, 0.0, 0.0, 1.0);
     //fragColor = mix(vec4(B * vColor.rgb, B), vec4(0.03,0.1,0.3,1.0), 0.5);
 }
 

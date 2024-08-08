@@ -26,10 +26,10 @@ class MediumModel(torch.nn.Module):
         self._backscatter = torch.nn.Parameter(backscatter.requires_grad_(True))
 
         l = [
-            {'params': [self._colour], 'lr': 0.05, "name": "colour"},
-            {'params': [self._backscatter], 'lr': 0.05, "name": "backscatter"},
+            {'params': [self._colour], 'lr': 0.025, "name": "colour"},
+            {'params': [self._backscatter], 'lr': 0.025, "name": "backscatter"},
         ]
-        self.optimizer = torch.optim.Adam(l, lr=0.0, eps=1e-15)
+        self.optimizer = torch.optim.Adam(l, lr=0.001, eps=1e-15)
 
     def calculate_directions(self, camera):
         focal_length_x = math.tan(camera.FoVx * 0.5)

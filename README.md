@@ -22,6 +22,7 @@
 * Store output as datetime
 * Re-run model with Softplus final activation
 * Load Onnx model as texture and apply to vertex shader Reference: https://webgl2fundamentals.org/webgl/lessons/webgl-skybox.html
+* Folder cleanup
 
 ### Report TODO
 * Nerfstudio image and load in WebGL

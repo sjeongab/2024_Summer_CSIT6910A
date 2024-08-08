@@ -325,27 +325,25 @@ class GaussianModel:
     def _prune_optimizer(self, mask):
         optimizable_tensors = {}
         for group in self.optimizer.param_groups:
-            try:
-                stored_state = self.optimizer.state.get(group['params'][0], None)
-                if stored_state is not None:
-                    stored_state["exp_avg"] = stored_state["exp_avg"][mask]
-                    stored_state["exp_avg_sq"] = stored_state["exp_avg_sq"][mask]
+            stored_state = self.optimizer.state.get(group['params'][0], None)
+            if stored_state is not None:
+                stored_state["exp_avg"] = stored_state["exp_avg"][mask]
+                stored_state["exp_avg_sq"] = stored_state["exp_avg_sq"][mask]
 
-                    del self.optimizer.state[group['params'][0]]
-                    group["params"][0] = nn.Parameter((group["params"][0][mask].requires_grad_(True)))
-                    self.optimizer.state[group['params'][0]] = stored_state
+                del self.optimizer.state[group['params'][0]]
+                group["params"][0] = nn.Parameter((group["params"][0][mask].requires_grad_(True)))
+                self.optimizer.state[group['params'][0]] = stored_state
 
-                    optimizable_tensors[group["name"]] = group["params"][0]
-                else:
-                    group["params"][0] = nn.Parameter(group["params"][0][mask].requires_grad_(True))
-                    optimizable_tensors[group["name"]] = group["params"][0]
-            except:
-                continue
+                optimizable_tensors[group["name"]] = group["params"][0]
+            else:
+                group["params"][0] = nn.Parameter(group["params"][0][mask].requires_grad_(True))
+                optimizable_tensors[group["name"]] = group["params"][0]
         return optimizable_tensors
 
     def prune_points(self, mask):
         valid_points_mask = ~mask
         optimizable_tensors = self._prune_optimizer(valid_points_mask)
+        #print(optimizable_tensors["xyz"].shape)
 
         self._xyz = optimizable_tensors["xyz"]
         self._features_dc = optimizable_tensors["f_dc"]
@@ -456,6 +454,7 @@ class GaussianModel:
             big_points_ws = self.get_scaling.max(dim=1).values > 0.1 * extent
             prune_mask = torch.logical_or(torch.logical_or(prune_mask, big_points_vs), big_points_ws)
         self.prune_points(prune_mask)
+
 
         torch.cuda.empty_cache()
 

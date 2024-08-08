@@ -583,3 +583,8 @@ class SeathruModel(Model):
             )
 
         return metrics_dict, images_dict
+    
+    def get_rgba_image(outputs: Dict[str, torch.Tensor], output_name: str = 'rgb') -> torch.Tensor:
+        print(outputs)
+        return
+
