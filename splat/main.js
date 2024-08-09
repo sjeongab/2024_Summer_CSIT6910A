@@ -657,6 +657,7 @@ precision highp float;
 precision highp int;
 
 uniform highp usampler2D u_texture;
+uniform sampler2D medium;
 uniform mat4 projection, view;
 uniform vec2 focal;
 uniform vec2 viewport;
@@ -701,10 +702,10 @@ void main () {
     vec2 minorAxis = min(sqrt(2.0 * lambda2), 1024.0) * vec2(diagonalVector.y, -diagonalVector.x);
 
     vec4 color = clamp(pos2d.z/pos2d.w+1.0, 0.0, 1.0) * vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
-    vec4 watercolor = vec4(1.0/255.0, 50.0/255.0, 32.0/255.0, 0.5);
+    vec4 watercolor = texture(medium, vec2(position.x, position.y));
 
-    //vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
-    vColor = color;
+    vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
+    //vColor = color;
     vPosition = position;
 
     vec2 vCenter = vec2(pos2d) / pos2d.w;
@@ -730,6 +731,7 @@ void main () {
     if (A < -4.0) discard;
     float B = exp(A) * vColor.a;
     fragColor = vec4(B * vColor.rgb, B);
+
     //fragColor = vec4(vColor.a, 0.0, 0.0, 1.0);
     //fragColor = mix(vec4(B * vColor.rgb, B), vec4(0.03,0.1,0.3,1.0), 0.5);
 }
@@ -847,9 +849,13 @@ async function main() {
 
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
+    
 
     var u_textureLocation = gl.getUniformLocation(program, "u_texture");
     gl.uniform1i(u_textureLocation, 0);
+
+    var mediumLocation = gl.getUniformLocation(program, "medium");
+    gl.uniform1i(mediumLocation, 1);
 
     const indexBuffer = gl.createBuffer();
     const a_index = gl.getAttribLocation(program, "index");
@@ -1191,8 +1197,8 @@ async function main() {
     //console.log(session.get_inputs()[0]);
     const feeds = {pos: pos, viewMatrix: matrix}
     const results = await session.run(feeds);
-    const medium_colour = results["medium_rgb"]["cpuData"];
-    const backscatter = results["backscatter"]["cpuData"];
+    const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
+    const backscatter = results["backscatter"]["cpuData"].map(function(x){return  x * 255;});
     
     /*kdTreeData.fillDataArra
     texture = gl.createTexture();
@@ -1212,7 +1218,7 @@ async function main() {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.bindTexture(gl.TEXTURE_2D, null);
     }*/
-    console.log(typeof(medium_colour));
+    //console.log(typeof(medium_colour));
     console.log(medium_colour);
     //const outputMap = await sess.run([input]);
 
@@ -1372,22 +1378,14 @@ async function main() {
         const currentFps = 1000 / (now - lastFrame) || 0;
         avgFps = avgFps * 0.9 + currentFps * 0.1;
 
+        var medium = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, medium);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
-            //gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.clearColor(0.0,0.0,0.0,0.0);
-            /*kdTreeData = new Int32Array(1058*1600);
-            kdTreeData.fill(100,1000);
-            texture = gl.createTexture();
-            //gl.activeTexture(gl.TEXTURE3);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32I, 1058, 1600, 0, gl.RED_INTEGER, gl.INT, kdTreeData);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.bindTexture(gl.TEXTURE_2D, null);*/
-            //gl.clearColor(1/255, 50/255, 32/255,0.5);
+            gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
         } else {
             gl.clear(gl.COLOR_BUFFER_BIT);
