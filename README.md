@@ -27,13 +27,9 @@
 ### Report TODO
 * Nerfstudio image and load in WebGL
 * ONNX load
-* Medium Image, Ocean Floor image
-* 3DGS by opacity
-* Medium model flow
 * Result(Rendering speed, WebGL Rendering speed, PSNR, loss, quality)
-* Further improvements
+* Further improvements - depth parameter, onnx loading, water quality update
 * Conclusion
-* Meeting Notes
 
 
 ## Idea
@@ -200,3 +196,4 @@
 
 **[2024-08-03]**
   * Load Onnx model in WebGL
+
