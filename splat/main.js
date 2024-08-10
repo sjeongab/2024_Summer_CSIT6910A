@@ -704,7 +704,7 @@ void main () {
     vec4 color = clamp(pos2d.z/pos2d.w+1.0, 0.0, 1.0) * vec4((cov.w) & 0xffu, (cov.w >> 8) & 0xffu, (cov.w >> 16) & 0xffu, (cov.w >> 24) & 0xffu) / 255.0;
     vec4 watercolor = texture(medium, vec2(position.x, position.y));
 
-    vColor = vec4((exp(-0.5*pos2d.z)*color + (1.0-exp(-0.5*pos2d.z))*watercolor).rgb, 1.0);
+    vColor = vec4((exp(-0.5*pos2d.z*0.1)*color + (1.0-exp(-0.5*pos2d.z*0.1))*watercolor).rgb, 1.0);
     //vColor = color;
     vPosition = position;
 
@@ -1188,7 +1188,24 @@ async function main() {
     });
 
     let leftGamepadTrigger, rightGamepadTrigger;
-    
+
+    let camToWorldMatrix = mat3.fromValues(viewMatrix[0], viewMatrix[1], viewMatrix[2], viewMatrix[4], viewMatrix[5], viewMatrix[6], viewMatrix[8], viewMatrix[9], viewMatrix[10]);
+    //const input = new onnx.Tensor(new Float32Array([camera.fx, camera.fy, camera.width, camera.height, camera.position, camToWorldMatrix]), "float32");
+    const pos = new ort.Tensor('float32', camera.position, [3]);
+    const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
+    const feeds = {pos: pos, viewMatrix: matrix}
+    const results = await session.run(feeds);
+    const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
+    const backscatter = results["backscatter"]["cpuData"].map(function(x){return  x * 255;});
+    var int_medium_colour = new Uint8Array(1 * 1 * 4);
+    for (let j = 0; j < 1*1*4; j++) {
+        if (j % 4 != 3){
+            int_medium_colour[j] = parseInt(medium_colour[j - Math.floor(j/4)]);
+        }
+        else{
+            int_medium_colour[j] = 255;
+        }
+    }
 
      
 
@@ -1351,12 +1368,12 @@ async function main() {
         const pos = new ort.Tensor('float32', camera.position, [3]);
         const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
         const feeds = {pos: pos, viewMatrix: matrix}
-        const results = await session.run(feeds);
-        const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
+        //const results = await session.run(feeds);
+        /*const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
         const backscatter = results["backscatter"]["cpuData"].map(function(x){return  x * 255;});
         console.log(medium_colour);
         console.log(backscatter);
-        /*var int_medium_colour = new Uint8Array(1 * 1 * 4);
+        /ar int_medium_colour = new Uint8Array(1 * 1 * 4);
         for (let j = 0; j < 1*1*4; j++) {
             if (j % 4 != 3){
                 int_medium_colour[j] = parseInt(medium_colour[j - Math.floor(j/4)]);
@@ -1369,10 +1386,10 @@ async function main() {
         const currentFps = 1000 / (now - lastFrame) || 0;
         avgFps = avgFps * 0.9 + currentFps * 0.1;
 
-        //var medium = gl.createTexture();
-        //gl.activeTexture(gl.TEXTURE1);
-        //gl.bindTexture(gl.TEXTURE_2D, medium);
-        //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
+        var medium = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, medium);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
        // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
