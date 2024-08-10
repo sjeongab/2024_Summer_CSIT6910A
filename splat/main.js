@@ -748,11 +748,9 @@ let viewMatrix = defaultViewMatrix;
 
 async function main() {
     const session = await ort.InferenceSession.create('./medium_model.onnx');
-    //const sess = new onnx.InferenceSession();
-    //const loadingModelPromise = sess.loadModel("./medium_model.onnx");
     let carousel = true;
     const params = new URLSearchParams(location.search);
-    //loadingModelPromise.then(() => { })
+
     try {
         viewMatrix = JSON.parse(decodeURIComponent(location.hash.slice(1)));
         carousel = false;
@@ -1190,39 +1188,12 @@ async function main() {
     });
 
     let leftGamepadTrigger, rightGamepadTrigger;
-    let camToWorldMatrix = mat3.fromValues(viewMatrix[0], viewMatrix[1], viewMatrix[2], viewMatrix[4], viewMatrix[5], viewMatrix[6], viewMatrix[8], viewMatrix[9], viewMatrix[10]);
-    //const input = new onnx.Tensor(new Float32Array([camera.fx, camera.fy, camera.width, camera.height, camera.position, camToWorldMatrix]), "float32");
-    const pos = new ort.Tensor('float32', camera.position, [3]);
-    const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
-    //console.log(session.get_inputs()[0]);
-    const feeds = {pos: pos, viewMatrix: matrix}
-    const results = await session.run(feeds);
-    const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
-    const backscatter = results["backscatter"]["cpuData"].map(function(x){return  x * 255;});
     
-    /*kdTreeData.fillDataArra
-    texture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE3);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32I, 1058, 1600, 0, gl.RED_INTEGER, gl.INT, this.kdTreeData);*/
-    /*function initBkgnd() {
-        backTex = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, medium_colour);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tex.Img);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-    }*/
-    //console.log(typeof(medium_colour));
-    console.log(medium_colour);
-    //const outputMap = await sess.run([input]);
 
-    const frame = (now) => {
+     
+
+    async function frame(now) {
+    //const frame = (now) => {
         //const array = new Array(new Array<float>(), new Array<float>(), new Array<float>());
         
         let inv = invert4(viewMatrix);
@@ -1375,17 +1346,38 @@ async function main() {
         const viewProj = multiply4(projectionMatrix, actualViewMatrix);
         worker.postMessage({ view: viewProj });
 
+        let camToWorldMatrix = mat3.fromValues(viewProj[0], viewProj[1], viewProj[2], viewProj[4], viewProj[5], viewProj[6], viewProj[8], viewProj[9], viewProj[10]);
+        //const input = new onnx.Tensor(new Float32Array([camera.fx, camera.fy, camera.width, camera.height, camera.position, camToWorldMatrix]), "float32");
+        const pos = new ort.Tensor('float32', camera.position, [3]);
+        const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
+        const feeds = {pos: pos, viewMatrix: matrix}
+        const results = await session.run(feeds);
+        const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
+        const backscatter = results["backscatter"]["cpuData"].map(function(x){return  x * 255;});
+        console.log(medium_colour);
+        console.log(backscatter);
+        /*var int_medium_colour = new Uint8Array(1 * 1 * 4);
+        for (let j = 0; j < 1*1*4; j++) {
+            if (j % 4 != 3){
+                int_medium_colour[j] = parseInt(medium_colour[j - Math.floor(j/4)]);
+            }
+            else{
+                int_medium_colour[j] = 255;
+            }
+        }*/
+
         const currentFps = 1000 / (now - lastFrame) || 0;
         avgFps = avgFps * 0.9 + currentFps * 0.1;
 
-        var medium = gl.createTexture();
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, medium);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
+        //var medium = gl.createTexture();
+        //gl.activeTexture(gl.TEXTURE1);
+        //gl.bindTexture(gl.TEXTURE_2D, medium);
+        //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
+       // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
             gl.uniformMatrix4fv(u_view, false, actualViewMatrix);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             gl.drawArraysInstanced(gl.TRIANGLE_FAN, 0, 4, vertexCount);
         } else {
             gl.clear(gl.COLOR_BUFFER_BIT);
