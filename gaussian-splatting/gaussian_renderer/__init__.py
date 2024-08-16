@@ -101,11 +101,10 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumTcnnModel, pipe, 
     if add_medium:
         medium_outputs = medium.get_output(viewpoint_camera)
         medium_colour = medium_outputs["medium_rgb"]
-        print(medium_colour)
         medium_bs = medium_outputs["medium_bs"]
         z = depth.repeat(3,1,1) / 10.0
         water_image = torch.exp(-1*medium_bs*z)*rendered_image + (1 - torch.exp(-1*medium_bs*z))*medium_colour
-        return {"render": water_image,
+        return {"render": (1 - torch.exp(-1*medium_bs*z))*medium_colour,
                 "viewspace_points": screenspace_points,
                 "visibility_filter" : radii > 0,
                 "radii": radii,

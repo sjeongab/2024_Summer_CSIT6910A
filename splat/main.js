@@ -747,7 +747,7 @@ let viewMatrix = defaultViewMatrix;
 
 
 async function main() {
-    const session = await ort.InferenceSession.create('./medium_model.onnx');
+    //const session = await ort.InferenceSession.create('./medium_model.onnx');
     let carousel = true;
     const params = new URLSearchParams(location.search);
 
@@ -758,8 +758,9 @@ async function main() {
     const url = new URL(
         // "nike.splat",
         // location.href,
-        params.get("url") || "nike.splat",
-        "https://huggingface.co/cakewalk/splat-data/resolve/main/",
+        //params.get("url") || "nike.splat",
+        //"https://huggingface.co/cakewalk/splat-data/resolve/main/",
+        "https://huggingface.co/sjeongab/seathru/resolve/main/seathru.splat",
     );
 
     const req = await fetch(url, {
@@ -1189,8 +1190,8 @@ async function main() {
 
     let leftGamepadTrigger, rightGamepadTrigger;
 
+    const session = await ort.InferenceSession.create('./medium_model.onnx');
     let camToWorldMatrix = mat3.fromValues(viewMatrix[0], viewMatrix[1], viewMatrix[2], viewMatrix[4], viewMatrix[5], viewMatrix[6], viewMatrix[8], viewMatrix[9], viewMatrix[10]);
-    //const input = new onnx.Tensor(new Float32Array([camera.fx, camera.fy, camera.width, camera.height, camera.position, camToWorldMatrix]), "float32");
     const pos = new ort.Tensor('float32', camera.position, [3]);
     const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
     const feeds = {pos: pos, viewMatrix: matrix}
@@ -1365,9 +1366,12 @@ async function main() {
 
         let camToWorldMatrix = mat3.fromValues(viewProj[0], viewProj[1], viewProj[2], viewProj[4], viewProj[5], viewProj[6], viewProj[8], viewProj[9], viewProj[10]);
         //const input = new onnx.Tensor(new Float32Array([camera.fx, camera.fy, camera.width, camera.height, camera.position, camToWorldMatrix]), "float32");
-        const pos = new ort.Tensor('float32', camera.position, [3]);
-        const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
-        const feeds = {pos: pos, viewMatrix: matrix}
+        //const pos = new ort.Tensor('float32', camera.position, [3]);
+        //const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
+        //const feeds = {pos: pos, viewMatrix: matrix}
+        //model_time = Date.now();
+        const results = await session.run(feeds);
+        //console.log(Date.now()-model_time);
         //const results = await session.run(feeds);
         /*const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
         const backscatter = results["backscatter"]["cpuData"].map(function(x){return  x * 255;});
