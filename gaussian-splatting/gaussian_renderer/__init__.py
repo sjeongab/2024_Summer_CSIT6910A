@@ -16,7 +16,6 @@ from scene.gaussian_model import GaussianModel
 from scene.medium_model import MediumModel, MediumTcnnModel
 from utils.sh_utils import eval_sh
 
-#def render(viewpoint_camera, pc : GaussianModel, medium: MediumModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None):
 def render(viewpoint_camera, pc : GaussianModel, medium: MediumTcnnModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None, add_medium=True):
     """
     Render the scene. 
@@ -102,9 +101,9 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumTcnnModel, pipe, 
         medium_outputs = medium.get_output(viewpoint_camera)
         medium_colour = medium_outputs["medium_rgb"]
         medium_bs = medium_outputs["medium_bs"]
-        z = depth.repeat(3,1,1) / 10.0
+        z = (torch.nn.functional.normalize(depth.repeat(3,1,1))+1) / 2.0
         water_image = torch.exp(-1*medium_bs*z)*rendered_image + (1 - torch.exp(-1*medium_bs*z))*medium_colour
-        return {"render": (1 - torch.exp(-1*medium_bs*z))*medium_colour,
+        return {"render": water_image,
                 "viewspace_points": screenspace_points,
                 "visibility_filter" : radii > 0,
                 "radii": radii,

@@ -31,12 +31,10 @@ except ImportError:
     TENSORBOARD_FOUND = False
 
 def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoint_iterations, checkpoint, debug_from):
-    #model_time = time.time()
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
     gaussians = GaussianModel(dataset.sh_degree)
     medium = MediumModel().to("cuda")
-    #medium = MediumTcnnModel().to("cuda")
     medium.train()
     
 
@@ -93,10 +91,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
         bg = torch.rand((3), device="cuda") if opt.random_background else background
 
-        if iteration < 5000:
-            render_pkg = render(viewpoint_cam, gaussians, medium, pipe, bg, add_medium=True)
-        else:
-            render_pkg = render(viewpoint_cam, gaussians, medium, pipe, bg, add_medium=True)
+        render_pkg = render(viewpoint_cam, gaussians, medium, pipe, bg, add_medium=True)
         image, viewspace_point_tensor, visibility_filter, radii, depth = render_pkg["render"], render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"], render_pkg["depth"]
 
         # Loss
