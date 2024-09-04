@@ -9,3 +9,4 @@
 * Real-time WebGL rendering
 * Vis code analysis
 * Depth and opacity adjustment
+* Original Seathru-NeRF depth analysis

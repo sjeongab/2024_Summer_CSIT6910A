@@ -1191,7 +1191,9 @@ async function main() {
     let leftGamepadTrigger, rightGamepadTrigger;
 
     const session = await ort.InferenceSession.create('./medium_model.onnx');
-    let camToWorldMatrix = mat3.fromValues(viewMatrix[0], viewMatrix[1], viewMatrix[2], viewMatrix[4], viewMatrix[5], viewMatrix[6], viewMatrix[8], viewMatrix[9], viewMatrix[10]);
+    let camToWorldMatrix = mat3.fromValues(
+        viewMatrix[0], viewMatrix[1], viewMatrix[2], viewMatrix[4], 
+        viewMatrix[5], viewMatrix[6], viewMatrix[8], viewMatrix[9], viewMatrix[10]);
     const pos = new ort.Tensor('float32', camera.position, [3]);
     const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
     const feeds = {pos: pos, viewMatrix: matrix}
@@ -1370,7 +1372,7 @@ async function main() {
         //const matrix = new ort.Tensor('float32', camToWorldMatrix, [3,3]);
         //const feeds = {pos: pos, viewMatrix: matrix}
         //model_time = Date.now();
-        const results = await session.run(feeds);
+        //const results = await session.run(feeds);
         //console.log(Date.now()-model_time);
         //const results = await session.run(feeds);
         /*const medium_colour = results["medium_rgb"]["cpuData"].map(function(x){return  x * 255;});
@@ -1391,9 +1393,9 @@ async function main() {
         avgFps = avgFps * 0.9 + currentFps * 0.1;
 
         var medium = gl.createTexture();
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, medium);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
+        //gl.activeTexture(gl.TEXTURE1);
+        //gl.bindTexture(gl.TEXTURE_2D, medium);
+        //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
        // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, int_medium_colour);
         if (vertexCount > 0) {
             document.getElementById("spinner").style.display = "none";
