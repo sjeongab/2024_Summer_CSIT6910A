@@ -23,7 +23,7 @@ from arguments import ModelParams, PipelineParams, get_combined_args
 from gaussian_renderer import GaussianModel, MediumModel, MediumTcnnModel
 
 def render_set(model_path, name, iteration, views, gaussians, medium, pipeline, background):
-    render_path = os.path.join(model_path, name, "ours_{}".format(iteration), "renders")
+    render_path = os.path.join(model_path, name, "ours_{}".format(iteration), "renders_medium")
     gts_path = os.path.join(model_path, name, "ours_{}".format(iteration), "gt")
 
     makedirs(render_path, exist_ok=True)
