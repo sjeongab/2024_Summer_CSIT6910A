@@ -96,21 +96,15 @@ def render(viewpoint_camera, pc : GaussianModel, medium: MediumTcnnModel, pipe, 
     # Those Gaussians that were frustum culled or had a radius of 0 were not visible.
     # They will be excluded from value updates used in the splitting criteria.
 
-    #Medium calculation
-    if add_medium:
-        medium_outputs = medium.get_output(viewpoint_camera)
-        medium_colour = medium_outputs["medium_rgb"]
-        medium_bs = medium_outputs["medium_bs"]
-        z = (torch.nn.functional.normalize(depth.repeat(3,1,1))+1) / 2.0
-        water_image = torch.exp(-1*medium_bs*z)*rendered_image + (1 - torch.exp(-1*medium_bs*z))*medium_colour
-        return {"render": rendered_image,
-                "viewspace_points": screenspace_points,
-                "visibility_filter" : radii > 0,
-                "radii": radii,
-                "depth": depth}
-    else:
-        return {"render": rendered_image,
-                "viewspace_points": screenspace_points,
-                "visibility_filter" : radii > 0,
-                "radii": radii,
-                "depth": depth}
+    medium_outputs = medium.get_output(viewpoint_camera)
+    medium_colour = medium_outputs["medium_rgb"]
+    medium_bs = medium_outputs["medium_bs"]
+    z = (torch.nn.functional.normalize(depth.repeat(3,1,1))+1) / 2.0
+    nowater_image = torch.exp(-1*medium_bs*z)*rendered_image
+    medium_image = (1 - torch.exp(-1*medium_bs*z))*medium_colour
+    water_image = nowater_image + medium_image
+    return {"render": water_image,
+            "viewspace_points": screenspace_points,
+            "visibility_filter" : radii > 0,
+            "radii": radii,
+            "depth": depth}
